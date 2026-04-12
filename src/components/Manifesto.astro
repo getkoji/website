@@ -1,0 +1,100 @@
+---
+---
+
+<section class="manifesto">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">01</span>
+        <span>Manifesto</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="manifesto-grid">
+      <h2 class="display">
+        Your documents.<br/>
+        Your infrastructure.<br/>
+        <em class="italic-accent">Your rules.</em>
+      </h2>
+
+      <div class="prose">
+        <p>
+          Every contract, invoice, and form in your business contains data worth extracting. But the tools that extract it expect you to hand your data over — to their cloud, their servers, their terms of service.
+        </p>
+        <p>
+          Koji doesn't work that way. It runs on your infrastructure. It uses the models you choose. It shows you exactly what it's doing. And it's open source, forever.
+        </p>
+        <p class="signature">
+          — The thing we wished existed when we needed it.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .manifesto {
+    padding: var(--section-pad) 0;
+    position: relative;
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 5rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .manifesto-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .manifesto h2 {
+    letter-spacing: -0.03em;
+  }
+
+  .italic-accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .prose {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-width: 48ch;
+    font-size: 1.125rem;
+    line-height: 1.65;
+    color: var(--ink-2);
+  }
+
+  .prose p:first-child::first-line {
+    font-variant: small-caps;
+    letter-spacing: 0.02em;
+  }
+
+  .signature {
+    font-family: var(--font-display);
+    font-style: italic;
+    color: var(--ink-3);
+    font-size: 1rem !important;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 900px) {
+    .manifesto-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+</style>

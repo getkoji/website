@@ -1,0 +1,206 @@
+---
+---
+
+<section class="cta">
+  <div class="container">
+    <div class="cta-inner">
+      <div class="cta-content">
+        <p class="eyebrow">
+          <span>Five minutes to first extraction</span>
+        </p>
+
+        <h2 class="display">
+          Try Koji<br/>
+          <em class="italic">on something real.</em>
+        </h2>
+
+        <p class="lede">
+          Point it at an invoice, a contract, a form — anything you've been meaning to turn into data. The open source version is the whole product. No signup, no trial, no catch.
+        </p>
+      </div>
+
+      <div class="cta-actions">
+        <div class="install-block">
+          <div class="install-header">
+            <span class="install-label">Install</span>
+            <button class="copy-btn" type="button" data-copy="pip install koji-cli" aria-label="Copy command">
+              <span>copy</span>
+            </button>
+          </div>
+          <pre class="install-cmd"><span class="tok-prompt">$</span> pip install koji-cli</pre>
+        </div>
+
+        <div class="cta-links">
+          <a href="https://github.com/getkoji/koji" class="btn btn-primary">
+            View on GitHub
+            <span class="arrow">→</span>
+          </a>
+          <a href="https://docs.getkoji.dev" class="btn btn-ghost">
+            Read the docs
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta {
+    padding: var(--section-pad) 0;
+    background: var(--cream-2);
+    border-top: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--border) 1px, transparent 1px);
+    background-size: 64px 100%;
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .cta > * { position: relative; }
+
+  .cta-inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .cta-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  .cta h2 {
+    letter-spacing: -0.03em;
+  }
+
+  .cta .italic {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .cta .lede {
+    max-width: 50ch;
+  }
+
+  /* Actions ============================================================= */
+
+  .cta-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .install-block {
+    background: var(--ink);
+    color: var(--cream-2);
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .install-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1rem 0.75rem 1.25rem;
+    border-bottom: 1px solid rgba(244, 238, 226, 0.08);
+  }
+
+  .install-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--cream-4);
+  }
+
+  .copy-btn {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--cream-3);
+    padding: 0.3rem 0.65rem;
+    border: 1px solid rgba(244, 238, 226, 0.15);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  .copy-btn:hover {
+    color: var(--cream);
+    border-color: var(--vermillion);
+    background: var(--vermillion);
+  }
+
+  .copy-btn.copied {
+    background: var(--vermillion);
+    color: var(--cream);
+    border-color: var(--vermillion);
+  }
+
+  .install-cmd {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    padding: 1.4rem 1.25rem;
+    margin: 0;
+    color: var(--cream);
+    letter-spacing: -0.01em;
+  }
+
+  .cta-links {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 900px) {
+    .cta-inner {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .cta-links {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .btn {
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  const copyBtn = document.querySelector<HTMLButtonElement>('.copy-btn');
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const text = copyBtn.dataset.copy ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+        copyBtn.classList.add('copied');
+        const label = copyBtn.querySelector('span');
+        const original = label?.textContent ?? 'copy';
+        if (label) label.textContent = 'copied';
+        setTimeout(() => {
+          copyBtn.classList.remove('copied');
+          if (label) label.textContent = original;
+        }, 1600);
+      } catch {
+        /* clipboard unavailable — ignore */
+      }
+    });
+  }
+</script>

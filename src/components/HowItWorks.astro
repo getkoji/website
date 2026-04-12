@@ -1,0 +1,177 @@
+---
+const steps = [
+  {
+    num: 'i',
+    title: 'Define a schema',
+    desc: 'Declare what you want to extract in a few lines of YAML. Field names, types, descriptions. The description guides the model.',
+    code: `name: invoice
+fields:
+  invoice_number:
+    type: string
+    required: true
+  total_amount:
+    type: number
+  line_items:
+    type: array`,
+    lang: 'yaml',
+  },
+  {
+    num: 'ii',
+    title: 'Run the pipeline',
+    desc: 'Point Koji at a file or a directory. It parses, classifies, routes, and extracts — locally, in containers you control.',
+    code: `$ koji process ./invoice.pdf \\
+    --schema schemas/invoice.yaml
+
+→ parsing   [████████] 1.2s
+→ extracting[████████] 2.4s
+→ validating[████████] 0.3s
+  ✓ 11 fields, 97% confidence`,
+    lang: 'sh',
+  },
+  {
+    num: 'iii',
+    title: 'Get structured data',
+    desc: 'Clean JSON, per-field confidence scores, and the chunks each field came from. Pipe it anywhere.',
+    code: `{
+  "invoice_number": "INV-2026-0042",
+  "date": "2026-03-15",
+  "vendor": "Acme Corp",
+  "total_amount": 4250.00,
+  "currency": "USD"
+}`,
+    lang: 'json',
+  },
+];
+---
+
+<section class="how" id="how">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">02</span>
+        <span>How it works</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="how-head">
+      <h2 class="display">
+        From document to data<br/>
+        in three unhurried steps.
+      </h2>
+      <p class="lede">
+        No black boxes. Every stage is inspectable, configurable, and replaceable. The pipeline is just a YAML file.
+      </p>
+    </div>
+
+    <div class="steps">
+      {steps.map((step, i) => (
+        <article class="step">
+          <header class="step-head">
+            <span class="step-num">{step.num}</span>
+            <h3 class="display">{step.title}</h3>
+          </header>
+          <p class="step-desc">{step.desc}</p>
+          <div class="step-code code-block">
+            <pre><code>{step.code}</code></pre>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .how {
+    padding: var(--section-pad) 0;
+    background: var(--cream-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .how-head {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 5rem;
+  }
+
+  .how-head h2 {
+    letter-spacing: -0.03em;
+  }
+
+  .how-head .lede {
+    padding-bottom: 0.75rem;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .step-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .step-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--vermillion);
+    font-variation-settings: 'opsz' 12;
+  }
+
+  .step h3 {
+    font-size: 1.45rem;
+    line-height: 1.15;
+    font-weight: 400;
+    letter-spacing: -0.015em;
+  }
+
+  .step-desc {
+    color: var(--ink-2);
+    line-height: 1.55;
+    font-size: 0.98rem;
+    max-width: 38ch;
+  }
+
+  .step-code {
+    font-size: 0.76rem;
+    padding: 1.25rem 1.35rem;
+    min-height: 190px;
+    white-space: pre;
+  }
+
+  @media (max-width: 900px) {
+    .how-head {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .steps {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+</style>

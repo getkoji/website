@@ -1,0 +1,240 @@
+---
+---
+
+<section class="showcase">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">03</span>
+        <span>Declarative extraction</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="showcase-head">
+      <h2 class="display">
+        Describe what you want.<br/>
+        Get <span class="italic-accent">exactly</span> that.
+      </h2>
+      <p class="lede">
+        Schemas are YAML. Pipelines are YAML. The model sees your field descriptions, not your prose. No prompt engineering, no fragile string templates — just a config file you can version, diff, and share.
+      </p>
+    </div>
+
+    <div class="split">
+      <div class="pane">
+        <div class="pane-header">
+          <span class="file-name">schemas/insurance.yaml</span>
+          <span class="file-badge">INPUT</span>
+        </div>
+        <div class="code-block">
+<pre><code><span class="tok-key">name</span>: insurance_policy
+<span class="tok-key">description</span>: <span class="tok-str">Commercial property policy</span>
+
+<span class="tok-key">fields</span>:
+  <span class="tok-key">policy_number</span>:
+    <span class="tok-key">type</span>: <span class="tok-str">string</span>
+    <span class="tok-key">required</span>: <span class="tok-num">true</span>
+    <span class="tok-key">description</span>: <span class="tok-str">Unique policy identifier</span>
+
+  <span class="tok-key">effective_date</span>:
+    <span class="tok-key">type</span>: <span class="tok-str">date</span>
+    <span class="tok-key">hints</span>:
+      <span class="tok-key">look_in</span>: [<span class="tok-str">declarations</span>]
+
+  <span class="tok-key">coverage</span>:
+    <span class="tok-key">type</span>: <span class="tok-str">object</span>
+    <span class="tok-key">properties</span>:
+      <span class="tok-key">property</span>: &#123; <span class="tok-key">type</span>: <span class="tok-str">number</span> &#125;
+      <span class="tok-key">liability</span>: &#123; <span class="tok-key">type</span>: <span class="tok-str">number</span> &#125;
+      <span class="tok-key">deductible</span>: &#123; <span class="tok-key">type</span>: <span class="tok-str">number</span> &#125;
+
+  <span class="tok-key">carrier</span>:
+    <span class="tok-key">type</span>: <span class="tok-str">mapping</span>
+    <span class="tok-key">values</span>: [<span class="tok-str">Chubb</span>, <span class="tok-str">Travelers</span>, <span class="tok-str">Hartford</span>]</code></pre>
+        </div>
+      </div>
+
+      <div class="arrow-row" aria-hidden="true">
+        <div class="arrow-line"></div>
+        <div class="arrow-label">Koji</div>
+        <div class="arrow-line"></div>
+      </div>
+
+      <div class="pane">
+        <div class="pane-header">
+          <span class="file-name">output/policy-a4f2.json</span>
+          <span class="file-badge accent">OUTPUT</span>
+        </div>
+        <div class="code-block">
+<pre><code>&#123;
+  <span class="tok-key">"policy_number"</span>: <span class="tok-str">"CPL-2026-887421"</span>,
+  <span class="tok-key">"effective_date"</span>: <span class="tok-str">"2026-04-01"</span>,
+  <span class="tok-key">"coverage"</span>: &#123;
+    <span class="tok-key">"property"</span>: <span class="tok-num">2500000</span>,
+    <span class="tok-key">"liability"</span>: <span class="tok-num">1000000</span>,
+    <span class="tok-key">"deductible"</span>: <span class="tok-num">5000</span>
+  &#125;,
+  <span class="tok-key">"carrier"</span>: <span class="tok-str">"Chubb"</span>,
+  <span class="tok-key">"_confidence"</span>: &#123;
+    <span class="tok-key">"policy_number"</span>: <span class="tok-num">0.99</span>,
+    <span class="tok-key">"effective_date"</span>: <span class="tok-num">0.97</span>,
+    <span class="tok-key">"coverage"</span>: <span class="tok-num">0.94</span>,
+    <span class="tok-key">"carrier"</span>: <span class="tok-num">0.98</span>
+  &#125;
+&#125;</code></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .showcase {
+    padding: var(--section-pad) 0;
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .showcase-head {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 4.5rem;
+  }
+
+  .showcase h2 {
+    letter-spacing: -0.03em;
+  }
+
+  .italic-accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .showcase-head .lede {
+    padding-bottom: 0.75rem;
+    max-width: 42ch;
+  }
+
+  /* Split panes ========================================================== */
+
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 100px 1fr;
+    gap: 0.5rem;
+    align-items: stretch;
+  }
+
+  .pane {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pane-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 1rem;
+    background: var(--cream-2);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 3px 3px 0 0;
+  }
+
+  .file-name {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-2);
+  }
+
+  .file-badge {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    padding: 0.2rem 0.5rem;
+    background: var(--cream);
+    color: var(--ink-3);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+
+  .file-badge.accent {
+    background: var(--vermillion);
+    color: var(--cream);
+    border-color: var(--vermillion);
+  }
+
+  .pane .code-block {
+    border-radius: 0 0 3px 3px;
+    font-size: 0.78rem;
+    line-height: 1.75;
+    flex: 1;
+    padding: 1.5rem 1.5rem 1.75rem;
+  }
+
+  .arrow-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 2rem 0;
+  }
+
+  .arrow-line {
+    flex: 1;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--cream-4), transparent);
+    min-height: 50px;
+  }
+
+  .arrow-label {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-style: italic;
+    color: var(--vermillion);
+    font-variation-settings: 'opsz' 12, 'SOFT' 50;
+    padding: 0.35rem 0;
+    transform: rotate(-90deg) translateX(0);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 960px) {
+    .showcase-head {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .split {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    .arrow-row {
+      flex-direction: row;
+      padding: 0.5rem 0;
+    }
+
+    .arrow-line {
+      height: 1px;
+      width: auto;
+      min-height: 0;
+      background: linear-gradient(to right, transparent, var(--cream-4), transparent);
+    }
+
+    .arrow-label {
+      transform: none;
+    }
+  }
+</style>

@@ -1,0 +1,145 @@
+---
+import BrandMark from './BrandMark.astro';
+---
+
+<header class="site-header">
+  <div class="container">
+    <nav class="nav">
+      <a href="/" class="brand" aria-label="Koji home">
+        <BrandMark size={28} strokeWidth={5} class="brand-svg" />
+        <span class="brand-name">koji</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#compare">Compare</a></li>
+        <li><a href="https://docs.getkoji.dev">Docs</a></li>
+        <li><a href="https://github.com/getkoji/koji">GitHub</a></li>
+      </ul>
+
+      <a href="https://github.com/getkoji/koji" class="nav-cta">
+        <span>★ Star</span>
+        <span class="cta-divider"></span>
+        <span class="cta-count">1.2k</span>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1.6rem 0;
+    z-index: 10;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--ink);
+  }
+
+  .brand :global(.brand-svg) {
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .brand:hover :global(.brand-svg) {
+    transform: rotate(-6deg);
+  }
+
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    line-height: 1;
+  }
+
+  .nav-links {
+    display: flex;
+    list-style: none;
+    gap: 2.25rem;
+    font-size: 0.92rem;
+    color: var(--ink-2);
+  }
+
+  .nav-links a {
+    position: relative;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover {
+    color: var(--vermillion);
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -4px;
+    height: 1px;
+    background: var(--vermillion);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.4s var(--ease-out);
+  }
+
+  .nav-links a:hover::after {
+    transform: scaleX(1);
+  }
+
+  .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.5rem 0.85rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 2px;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: var(--cream);
+    transition: all 0.3s;
+  }
+
+  .nav-cta:hover {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+
+  .cta-divider {
+    width: 1px;
+    height: 0.9rem;
+    background: currentColor;
+    opacity: 0.3;
+  }
+
+  .cta-count {
+    color: var(--vermillion);
+  }
+
+  .nav-cta:hover .cta-count {
+    color: var(--cream);
+  }
+
+  @media (max-width: 780px) {
+    .nav-links {
+      display: none;
+    }
+  }
+</style>

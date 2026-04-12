@@ -1,0 +1,168 @@
+---
+const pillars = [
+  {
+    title: 'Self-hosted',
+    body: 'Runs in Docker, docker-compose, or Kubernetes. On your laptop, your servers, or your private VPC. The documents never leave the network you control.',
+    symbol: '◉',
+  },
+  {
+    title: 'Model-agnostic',
+    body: 'Local models via Ollama, API providers like OpenAI and Anthropic, or your own inference endpoint. Mix and match per pipeline step. Change a line of YAML, not a line of code.',
+    symbol: '◈',
+  },
+  {
+    title: 'Open source',
+    body: 'Apache 2.0 licensed. No usage tracking, no phone-home, no feature flags that unlock behind a credit card. The code you run is the code you can read.',
+    symbol: '◇',
+  },
+];
+---
+
+<section class="sovereign">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">04</span>
+        <span>Data sovereignty</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="sovereign-head">
+      <h2 class="display">
+        Documents never leave<br/>
+        your infrastructure.
+      </h2>
+      <p class="lede">
+        Most document processing platforms were designed around a single assumption: that you'll happily upload your data to their cloud. Koji starts from the opposite premise.
+      </p>
+    </div>
+
+    <div class="pillars">
+      {pillars.map((p, i) => (
+        <article class="pillar">
+          <div class="pillar-num-row">
+            <span class="pillar-symbol">{p.symbol}</span>
+            <span class="pillar-num">0{i + 1}</span>
+          </div>
+          <h3 class="display pillar-title">{p.title}</h3>
+          <p class="pillar-body">{p.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sovereign {
+    padding: var(--section-pad) 0;
+    background: var(--ink);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sovereign > * { position: relative; z-index: 1; }
+
+  .sovereign .section-label { color: var(--cream-4); }
+  .sovereign .section-label .num { color: var(--vermillion); }
+  .sovereign .rule { border-top-color: rgba(244, 238, 226, 0.18); }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4.5rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .sovereign-head {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 6rem;
+  }
+
+  .sovereign-head h2 {
+    color: var(--cream);
+    letter-spacing: -0.03em;
+  }
+
+  .sovereign-head .lede {
+    color: var(--cream-3);
+    padding-bottom: 0.75rem;
+  }
+
+  /* Pillars ============================================================= */
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: rgba(244, 238, 226, 0.1);
+    border: 1px solid rgba(244, 238, 226, 0.1);
+  }
+
+  .pillar {
+    background: var(--ink);
+    padding: 2.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    position: relative;
+    transition: background 0.4s;
+  }
+
+  .pillar:hover {
+    background: rgba(244, 238, 226, 0.03);
+  }
+
+  .pillar-num-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(244, 238, 226, 0.12);
+  }
+
+  .pillar-symbol {
+    font-size: 1.6rem;
+    color: var(--vermillion);
+    line-height: 1;
+  }
+
+  .pillar-num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--cream-4);
+  }
+
+  .pillar-title {
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--cream);
+    font-variation-settings: 'opsz' 72, 'SOFT' 50;
+  }
+
+  .pillar-body {
+    color: var(--cream-3);
+    line-height: 1.6;
+    font-size: 0.98rem;
+    max-width: 36ch;
+  }
+
+  @media (max-width: 900px) {
+    .sovereign-head {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .pillars {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
