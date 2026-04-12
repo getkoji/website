@@ -8,7 +8,7 @@ import BrandMark from './BrandMark.astro';
       <p class="eyebrow reveal d1">
         <span>Open source</span>
         <span class="dot">·</span>
-        <span>Self-hosted</span>
+        <span>Cloud or self-hosted</span>
         <span class="dot">·</span>
         <span>Config-driven</span>
       </p>
@@ -19,16 +19,16 @@ import BrandMark from './BrandMark.astro';
       </h1>
 
       <p class="lede reveal d3">
-        Koji is the open source document processing platform for teams who can't ship their data to a third-party cloud. Parse, classify, and extract structured data from any document — on your own infrastructure, with the models you choose.
+        Koji turns any document — PDFs, Word, scans, contracts, forms — into clean, structured JSON. Run it on our cloud in two minutes, or self-host the open source core on your own infrastructure. Same product, your call.
       </p>
 
       <div class="hero-cta reveal d4">
-        <a href="https://docs.getkoji.dev/getting-started/" class="btn btn-primary">
-          Get started
+        <a href="#pricing" class="btn btn-primary">
+          Start free in the cloud
           <span class="arrow">→</span>
         </a>
-        <a href="https://github.com/getkoji/koji" class="btn btn-ghost">
-          View on GitHub
+        <a href="#run" class="btn btn-ghost">
+          Self-host
         </a>
       </div>
 
@@ -36,6 +36,7 @@ import BrandMark from './BrandMark.astro';
         <div class="snippet-dots" aria-hidden="true">
           <span></span><span></span><span></span>
         </div>
+        <div class="snippet-label" aria-hidden="true">self-hosted install</div>
         <pre class="code"><code><span class="tok-prompt">$</span> pip install koji-cli
 <span class="tok-prompt">$</span> koji init myproject --template invoice
 <span class="tok-prompt">$</span> koji process invoice.pdf
@@ -72,8 +73,11 @@ import BrandMark from './BrandMark.astro';
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    max-width: 820px;
     padding-top: 2rem;
+  }
+
+  .hero-content .lede {
+    max-width: 58ch;
   }
 
   .eyebrow .dot {
@@ -140,6 +144,18 @@ import BrandMark from './BrandMark.astro';
     left: 14px;
     display: flex;
     gap: 6px;
+    z-index: 2;
+  }
+
+  .snippet-label {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(244, 238, 226, 0.45);
     z-index: 2;
   }
 

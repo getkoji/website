@@ -1,0 +1,549 @@
+---
+import Waitlist from './Waitlist.astro';
+
+const tiers = [
+  {
+    name: 'Free',
+    price: '$0',
+    period: 'forever',
+    tagline: 'Try it. Process your first 100 docs.',
+    docs: '100',
+    pages: '25',
+    concurrency: '1',
+    overage: false,
+    features: [
+      'Full dashboard access',
+      'All schema features',
+      'All extraction strategies',
+      'Community support',
+    ],
+    cta: 'Join the waitlist',
+    ctaType: 'waitlist' as const,
+    featured: false,
+  },
+  {
+    name: 'Pro',
+    price: '$49',
+    period: '/month',
+    tagline: 'Everything you need to process documents at a real cadence.',
+    docs: '500',
+    pages: '100',
+    concurrency: '5',
+    overage: '$0.10 / doc',
+    features: [
+      'Everything in Free',
+      'Email support (24h SLA)',
+      'Per-field confidence scores',
+      '90-day job history',
+      'Webhooks & API',
+    ],
+    cta: 'Join the waitlist',
+    ctaType: 'waitlist' as const,
+    featured: true,
+  },
+  {
+    name: 'Scale',
+    price: '$299',
+    period: '/month',
+    tagline: 'For teams processing complex, multi-hundred-page documents.',
+    docs: '5,000',
+    pages: '500',
+    concurrency: '20',
+    overage: '$0.08 / doc',
+    features: [
+      'Everything in Pro',
+      'Priority support (4h SLA)',
+      'Volume overage pricing',
+      'Longer job retention',
+      'Advanced usage analytics',
+    ],
+    cta: 'Join the waitlist',
+    ctaType: 'waitlist' as const,
+    featured: false,
+  },
+  {
+    name: 'Enterprise',
+    price: 'Custom',
+    period: '',
+    tagline: 'Compliance, dedicated infrastructure, and a throat to choke.',
+    docs: 'Custom',
+    pages: 'Unlimited',
+    concurrency: 'Custom',
+    overage: 'Negotiated',
+    features: [
+      'SSO / SAML / SCIM',
+      'RBAC and audit logs',
+      'Dedicated tenant or BYOC',
+      'SOC 2, DPA, custom terms',
+      'Named support engineer',
+      'SLA with credits',
+    ],
+    cta: 'Contact sales',
+    ctaType: 'contact' as const,
+    featured: false,
+  },
+];
+---
+
+<section class="pricing" id="pricing">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">06</span>
+        <span>Pricing</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="pricing-head">
+      <h2 class="display">
+        Simple pricing.<br/>
+        <em class="italic-accent">No surprises.</em>
+      </h2>
+      <p class="lede">
+        Pay a flat monthly fee for an allowance of documents. When you need more, overage is tiered by volume. No per-token math, no credit systems, no "platform fees" at the bottom of the invoice.
+      </p>
+    </div>
+
+    <div class="tiers">
+      {tiers.map((tier) => (
+        <article class:list={['tier', { featured: tier.featured }]}>
+          {tier.featured && <span class="badge">Most popular</span>}
+
+          <header class="tier-head">
+            <h3 class="tier-name">{tier.name}</h3>
+            <p class="tier-price">
+              <span class="price">{tier.price}</span>
+              {tier.period && <span class="period">{tier.period}</span>}
+            </p>
+            <p class="tier-tagline">{tier.tagline}</p>
+          </header>
+
+          <dl class="tier-limits">
+            <div class="limit">
+              <dt>Documents / month</dt>
+              <dd>{tier.docs}</dd>
+            </div>
+            <div class="limit">
+              <dt>Pages / document</dt>
+              <dd>{tier.pages}</dd>
+            </div>
+            <div class="limit">
+              <dt>Concurrent jobs</dt>
+              <dd>{tier.concurrency}</dd>
+            </div>
+            <div class="limit">
+              <dt>Overage</dt>
+              <dd>{tier.overage || '—'}</dd>
+            </div>
+          </dl>
+
+          <ul class="tier-features">
+            {tier.features.map((f) => (
+              <li>
+                <span class="check" aria-hidden="true">—</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+
+          <footer class="tier-footer">
+            {tier.ctaType === 'contact' ? (
+              <a href="mailto:sales@getkoji.dev" class="tier-cta">
+                {tier.cta}
+                <span class="arrow">→</span>
+              </a>
+            ) : (
+              <a href="#waitlist" class="tier-cta">
+                {tier.cta}
+                <span class="arrow">→</span>
+              </a>
+            )}
+          </footer>
+        </article>
+      ))}
+    </div>
+
+    <div class="pricing-waitlist" id="waitlist">
+      <div class="waitlist-inner">
+        <div class="waitlist-copy">
+          <p class="eyebrow">
+            <span>Cloud is launching soon</span>
+          </p>
+          <h3 class="display">Get early access.</h3>
+          <p class="body-lg">
+            Koji Cloud opens in the next few weeks. Join the waitlist and we'll email you the moment it's live — with a founding-user discount on your first three months of Pro.
+          </p>
+        </div>
+        <Waitlist placeholder="you@company.com" buttonLabel="Join the waitlist" />
+      </div>
+    </div>
+
+    <p class="pricing-footnote">
+      <strong>Prefer to self-host?</strong> Koji OSS is free forever under the Apache 2.0 license. No limits, no metering, no phone-home. <a href="https://github.com/getkoji/koji">See it on GitHub →</a>
+    </p>
+  </div>
+</section>
+
+<style>
+  .pricing {
+    padding: var(--section-pad) 0;
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .pricing-head {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 4.5rem;
+  }
+
+  .pricing-head h2 {
+    letter-spacing: -0.03em;
+  }
+
+  .italic-accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .pricing-head .lede {
+    padding-bottom: 0.75rem;
+    max-width: 46ch;
+  }
+
+  /* Tier cards =========================================================== */
+
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+
+  .tier {
+    position: relative;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: border-color 0.3s, transform 0.4s var(--ease-out);
+  }
+
+  .tier:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-strong);
+  }
+
+  .tier.featured {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+
+  .badge {
+    position: absolute;
+    top: -0.7rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--vermillion);
+    color: var(--cream);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 0.35rem 0.7rem;
+    border-radius: 2px;
+    white-space: nowrap;
+  }
+
+  .tier-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tier.featured .tier-head {
+    border-bottom-color: rgba(244, 238, 226, 0.12);
+  }
+
+  .tier-name {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .tier.featured .tier-name {
+    color: var(--vermillion);
+  }
+
+  .tier-price {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  }
+
+  .tier-price .price {
+    font-size: clamp(2.2rem, 3vw, 2.75rem);
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .tier.featured .tier-price .price {
+    color: var(--cream);
+  }
+
+  .tier-price .period {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--ink-3);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .tier.featured .tier-price .period {
+    color: var(--cream-3);
+  }
+
+  .tier-tagline {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+    min-height: 2.6em;
+  }
+
+  .tier.featured .tier-tagline {
+    color: var(--cream-3);
+  }
+
+  .tier-limits {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+    margin: 0;
+  }
+
+  .tier.featured .tier-limits {
+    border-bottom-color: rgba(244, 238, 226, 0.12);
+  }
+
+  .limit {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.82rem;
+    gap: 0.75rem;
+  }
+
+  .limit dt {
+    color: var(--ink-3);
+    font-weight: 400;
+  }
+
+  .tier.featured .limit dt {
+    color: var(--cream-4);
+  }
+
+  .limit dd {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    color: var(--ink);
+    font-weight: 500;
+    text-align: right;
+  }
+
+  .tier.featured .limit dd {
+    color: var(--cream);
+  }
+
+  .tier-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+  }
+
+  .tier-features li {
+    display: flex;
+    gap: 0.55rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .tier.featured .tier-features li {
+    color: var(--cream-3);
+  }
+
+  .check {
+    color: var(--ink-4);
+    flex-shrink: 0;
+  }
+
+  .tier.featured .check {
+    color: var(--vermillion);
+  }
+
+  .tier-footer {
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .tier.featured .tier-footer {
+    border-top-color: rgba(244, 238, 226, 0.12);
+  }
+
+  .tier-cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.85rem 1rem;
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--border-strong);
+    border-radius: 2px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+
+  .tier-cta:hover {
+    background: var(--ink);
+    color: var(--cream);
+  }
+
+  .tier.featured .tier-cta {
+    background: var(--vermillion);
+    color: var(--cream);
+    border-color: var(--vermillion);
+  }
+
+  .tier.featured .tier-cta:hover {
+    background: var(--cream);
+    color: var(--ink);
+    border-color: var(--cream);
+  }
+
+  .tier-cta .arrow {
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .tier-cta:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  /* Waitlist block ======================================================= */
+
+  .pricing-waitlist {
+    margin-top: 4.5rem;
+    padding: 3rem 3.5rem;
+    background: var(--cream-2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    scroll-margin-top: 6rem;
+  }
+
+  .waitlist-inner {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .waitlist-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .waitlist-copy h3 {
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+
+  .waitlist-copy .body-lg {
+    max-width: 48ch;
+  }
+
+  /* Footnote ============================================================= */
+
+  .pricing-footnote {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--ink-2);
+  }
+
+  .pricing-footnote strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .pricing-footnote a {
+    color: var(--vermillion);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  /* Responsive =========================================================== */
+
+  @media (max-width: 1100px) {
+    .tiers {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 900px) {
+    .pricing-head {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .waitlist-inner {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .pricing-waitlist {
+      padding: 2rem 1.75rem;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .tiers {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

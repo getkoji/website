@@ -3,23 +3,48 @@
 
 <section class="cta">
   <div class="container">
-    <div class="cta-inner">
-      <div class="cta-content">
-        <p class="eyebrow">
-          <span>Five minutes to first extraction</span>
-        </p>
+    <div class="cta-head">
+      <p class="eyebrow">
+        <span>Two ways to start today</span>
+      </p>
 
-        <h2 class="display">
-          Try Koji<br/>
-          <em class="italic">on something real.</em>
-        </h2>
+      <h2 class="display">
+        Try Koji<br/>
+        <em class="italic">on something real.</em>
+      </h2>
 
-        <p class="lede">
-          Point it at an invoice, a contract, a form — anything you've been meaning to turn into data. The open source version is the whole product. No signup, no trial, no catch.
+      <p class="lede">
+        Point it at an invoice, a contract, a form — anything you've been meaning to turn into data. Start in the cloud if you want speed, or install the open source core if you want control.
+      </p>
+    </div>
+
+    <div class="cta-paths">
+      <div class="cta-path">
+        <div class="path-label">
+          <span class="label-num">01</span>
+          <span class="label-name">Koji Cloud</span>
+        </div>
+        <h3 class="display path-title">Sign up, upload, done.</h3>
+        <p class="path-desc">
+          Two minutes from zero to your first extraction. 100 docs/month free forever, $49/month Pro with 500 docs included. Launching soon.
         </p>
+        <a href="#pricing" class="btn btn-primary">
+          Join the waitlist
+          <span class="arrow">→</span>
+        </a>
       </div>
 
-      <div class="cta-actions">
+      <div class="cta-divider" aria-hidden="true"></div>
+
+      <div class="cta-path">
+        <div class="path-label">
+          <span class="label-num">02</span>
+          <span class="label-name">Koji OSS</span>
+        </div>
+        <h3 class="display path-title">pip install, go.</h3>
+        <p class="path-desc">
+          Apache 2.0 licensed. Full product, no feature gates. Runs on Docker, docker-compose, or Kubernetes. Your infrastructure, your rules.
+        </p>
         <div class="install-block">
           <div class="install-header">
             <span class="install-label">Install</span>
@@ -29,16 +54,9 @@
           </div>
           <pre class="install-cmd"><span class="tok-prompt">$</span> pip install koji-cli</pre>
         </div>
-
-        <div class="cta-links">
-          <a href="https://github.com/getkoji/koji" class="btn btn-primary">
-            View on GitHub
-            <span class="arrow">→</span>
-          </a>
-          <a href="https://docs.getkoji.dev" class="btn btn-ghost">
-            Read the docs
-          </a>
-        </div>
+        <a href="https://github.com/getkoji/koji" class="path-github">
+          View on GitHub →
+        </a>
       </div>
     </div>
   </div>
@@ -66,17 +84,12 @@
 
   .cta > * { position: relative; }
 
-  .cta-inner {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 5rem;
-    align-items: center;
-  }
-
-  .cta-content {
+  .cta-head {
     display: flex;
     flex-direction: column;
-    gap: 1.75rem;
+    gap: 1.5rem;
+    margin-bottom: 5rem;
+    max-width: 720px;
   }
 
   .cta h2 {
@@ -90,15 +103,85 @@
   }
 
   .cta .lede {
-    max-width: 50ch;
+    max-width: 55ch;
   }
 
-  /* Actions ============================================================= */
+  /* Two-path grid ======================================================= */
 
-  .cta-actions {
+  .cta-paths {
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 3rem;
+    align-items: start;
+  }
+
+  .cta-path {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.25rem;
+  }
+
+  .path-label {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .label-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.1rem;
+    color: var(--vermillion);
+    font-variation-settings: 'opsz' 12;
+  }
+
+  .label-name {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .path-title {
+    font-size: clamp(1.7rem, 2.5vw, 2.1rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+
+  .path-desc {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+    max-width: 44ch;
+    margin-bottom: 0.5rem;
+  }
+
+  .cta-divider {
+    background: var(--border);
+    align-self: stretch;
+  }
+
+  .path-github {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: color 0.3s;
+  }
+
+  .path-github:hover {
+    color: var(--vermillion);
+  }
+
+  .cta-path .btn {
+    align-self: flex-start;
   }
 
   .install-block {
@@ -158,27 +241,21 @@
     letter-spacing: -0.01em;
   }
 
-  .cta-links {
-    display: flex;
-    gap: 0.85rem;
-    flex-wrap: wrap;
-  }
-
   @media (max-width: 900px) {
-    .cta-inner {
+    .cta-paths {
       grid-template-columns: 1fr;
       gap: 3rem;
+    }
+
+    .cta-divider {
+      display: none;
     }
   }
 
   @media (max-width: 560px) {
-    .cta-links {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .btn {
+    .cta-path .btn {
       justify-content: center;
+      align-self: stretch;
     }
   }
 </style>

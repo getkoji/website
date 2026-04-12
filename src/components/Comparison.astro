@@ -2,13 +2,15 @@
 import BrandMark from './BrandMark.astro';
 
 const rows = [
-  { feature: 'Open source',               koji: true,  llama: false, textract: false, unstruct: 'Partial' },
-  { feature: 'Self-hosted',               koji: true,  llama: false, textract: false, unstruct: 'Enterprise only' },
-  { feature: 'Data never leaves your network', koji: true, llama: false, textract: false, unstruct: 'Enterprise only' },
-  { feature: 'BYO model provider',        koji: true,  llama: false, textract: false, unstruct: false },
-  { feature: 'Config-driven pipelines',   koji: true,  llama: 'Partial', textract: false, unstruct: 'Partial' },
-  { feature: 'Per-field confidence',      koji: true,  llama: false, textract: 'Partial', unstruct: false },
-  { feature: 'Predictable pricing',       koji: true,  llama: false, textract: true,  unstruct: false },
+  { feature: 'Open source core',               kojiCloud: true,  kojiOss: true,  llama: false,     textract: false,     unstruct: 'Partial' },
+  { feature: 'Self-hostable',                  kojiCloud: true,  kojiOss: true,  llama: false,     textract: false,     unstruct: 'Enterprise only' },
+  { feature: 'Data stays in your network',     kojiCloud: 'Optional', kojiOss: true, llama: false, textract: false,     unstruct: 'Enterprise only' },
+  { feature: 'BYO model provider',             kojiCloud: true,  kojiOss: true,  llama: false,     textract: false,     unstruct: false },
+  { feature: 'Config-driven pipelines',        kojiCloud: true,  kojiOss: true,  llama: 'Partial', textract: false,     unstruct: 'Partial' },
+  { feature: 'Per-field confidence',           kojiCloud: true,  kojiOss: true,  llama: false,     textract: 'Partial', unstruct: false },
+  { feature: 'Predictable pricing',            kojiCloud: true,  kojiOss: true,  llama: false,     textract: true,      unstruct: false },
+  { feature: 'Managed by us',                  kojiCloud: true,  kojiOss: false, llama: true,      textract: true,      unstruct: 'Enterprise only' },
+  { feature: 'Free forever option',            kojiCloud: true,  kojiOss: true,  llama: false,     textract: false,     unstruct: false },
 ];
 
 const renderCell = (value: any) => {
@@ -22,7 +24,7 @@ const renderCell = (value: any) => {
   <div class="container">
     <div class="label-row">
       <p class="section-label">
-        <span class="num">05</span>
+        <span class="num">07</span>
         <span>How it compares</span>
       </p>
       <hr class="rule flex-1" />
@@ -43,7 +45,13 @@ const renderCell = (value: any) => {
             <th scope="col" class="col-us">
               <span class="brand-cell">
                 <BrandMark size={20} strokeWidth={5} />
-                <span>koji</span>
+                <span>Koji Cloud</span>
+              </span>
+            </th>
+            <th scope="col" class="col-us">
+              <span class="brand-cell">
+                <BrandMark size={20} strokeWidth={5} />
+                <span>Koji OSS</span>
               </span>
             </th>
             <th scope="col">LlamaCloud</th>
@@ -55,9 +63,10 @@ const renderCell = (value: any) => {
           {rows.map((row) => (
             <tr>
               <th scope="row">{row.feature}</th>
-              {(['koji', 'llama', 'textract', 'unstruct'] as const).map((key) => {
+              {(['kojiCloud', 'kojiOss', 'llama', 'textract', 'unstruct'] as const).map((key) => {
                 const cell = renderCell(row[key]);
-                return <td class={`cell ${cell.class} ${key === 'koji' ? 'col-us' : ''}`}>{cell.text}</td>;
+                const isUs = key === 'kojiCloud' || key === 'kojiOss';
+                return <td class={`cell ${cell.class} ${isUs ? 'col-us' : ''}`}>{cell.text}</td>;
               })}
             </tr>
           ))}

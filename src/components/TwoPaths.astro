@@ -1,0 +1,408 @@
+---
+import BrandMark from './BrandMark.astro';
+---
+
+<section class="twopaths" id="run">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">04</span>
+        <span>Two ways to run Koji</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="twopaths-head">
+      <h2 class="display">
+        Cloud or self-hosted.<br/>
+        <em class="italic-accent">Same product, either way.</em>
+      </h2>
+      <p class="lede">
+        Most platforms force you to pick a side — hosted forever, or roll your own forever. Koji is built to be both. One product, two operators. Pick the path that fits, swap later if it stops fitting.
+      </p>
+    </div>
+
+    <div class="paths-grid">
+      <!-- Path 1: Cloud -->
+      <article class="path path-cloud">
+        <header class="path-head">
+          <div class="path-meta">
+            <span class="path-tag">Hosted</span>
+            <span class="path-status">Coming soon</span>
+          </div>
+          <h3 class="display">Koji Cloud</h3>
+          <p class="path-tagline">We run it. You upload and go.</p>
+        </header>
+
+        <ul class="path-features">
+          <li>
+            <span class="tick" aria-hidden="true">◉</span>
+            <div>
+              <strong>Two-minute signup.</strong> No Docker, no infrastructure, no YAML on day one.
+            </div>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">◉</span>
+            <div>
+              <strong>Free tier.</strong> 100 documents every month, forever. No credit card.
+            </div>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">◉</span>
+            <div>
+              <strong>Pro at $49/month.</strong> 500 docs, per-field confidence, email support.
+            </div>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">◉</span>
+            <div>
+              <strong>Isolated by design.</strong> Per-tenant encryption. Models are BYO or ours. Your data is yours.
+            </div>
+          </li>
+        </ul>
+
+        <footer class="path-footer">
+          <a href="#pricing" class="path-cta path-cta-primary">
+            <span>See pricing & join waitlist</span>
+            <span class="arrow">→</span>
+          </a>
+          <p class="path-audience">
+            <span class="for">For:</span>
+            Teams without a DevOps function, small operators, anyone who wants to start processing documents this afternoon.
+          </p>
+        </footer>
+      </article>
+
+      <!-- Path 2: OSS -->
+      <article class="path path-oss">
+        <header class="path-head">
+          <div class="path-meta">
+            <span class="path-tag">Self-hosted</span>
+            <span class="path-status available">Available today</span>
+          </div>
+          <h3 class="display">Koji OSS</h3>
+          <p class="path-tagline">You run it. Full control, full source.</p>
+        </header>
+
+        <ul class="path-features">
+          <li>
+            <span class="tick" aria-hidden="true">◇</span>
+            <div>
+              <strong>Apache 2.0.</strong> Free forever. Real open source, not open-core theatre.
+            </div>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">◇</span>
+            <div>
+              <strong>Five-minute install.</strong> <code>pip install koji-cli</code>, then <code>koji start</code>. Docker Compose under the hood.
+            </div>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">◇</span>
+            <div>
+              <strong>Your infrastructure.</strong> Laptop, VPC, Kubernetes. Documents never leave the network you control.
+            </div>
+          </li>
+          <li>
+            <span class="tick" aria-hidden="true">◇</span>
+            <div>
+              <strong>Your models.</strong> Local via Ollama, API providers, or your own inference endpoint. Mix per pipeline step.
+            </div>
+          </li>
+        </ul>
+
+        <footer class="path-footer">
+          <a href="https://docs.getkoji.dev/getting-started/" class="path-cta">
+            <span>Install with pip</span>
+            <span class="arrow">→</span>
+          </a>
+          <p class="path-audience">
+            <span class="for">For:</span>
+            Teams with compliance requirements, data sovereignty needs, custom model stacks, or anyone who just prefers to run their own tools.
+          </p>
+        </footer>
+      </article>
+    </div>
+
+    <p class="same-product">
+      <span class="same-accent">One codebase.</span> Same dashboard, same schemas, same pipelines, same CLI. The only difference is who operates the servers.
+    </p>
+  </div>
+</section>
+
+<style>
+  .twopaths {
+    padding: var(--section-pad) 0;
+    background: var(--cream-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .twopaths-head {
+    display: grid;
+    grid-template-columns: 1.7fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 5rem;
+  }
+
+  .twopaths-head h2 {
+    letter-spacing: -0.03em;
+  }
+
+  .italic-accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .twopaths-head .lede {
+    padding-bottom: 0.75rem;
+    max-width: 42ch;
+  }
+
+  /* Path cards =========================================================== */
+
+  .paths-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .path {
+    background: var(--cream);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    padding: 2.5rem 2.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+    position: relative;
+    transition: transform 0.5s var(--ease-out), box-shadow 0.5s;
+  }
+
+  .path:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .path-head {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding-bottom: 1.75rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .path-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .path-tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-3);
+    padding: 0.3rem 0.6rem;
+    background: var(--cream-2);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+  }
+
+  .path-status {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--vermillion);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .path-status::before {
+    content: '';
+    width: 0.4rem;
+    height: 0.4rem;
+    border-radius: 50%;
+    background: var(--vermillion);
+  }
+
+  .path-status.available {
+    color: var(--ochre);
+  }
+
+  .path-status.available::before {
+    background: var(--ochre);
+  }
+
+  .path h3 {
+    font-size: clamp(2rem, 3vw, 2.6rem);
+    line-height: 1.05;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+
+  .path-tagline {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.15rem;
+    color: var(--ink-2);
+    font-variation-settings: 'opsz' 24, 'SOFT' 80;
+  }
+
+  .path-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 0;
+    margin: 0;
+    flex: 1;
+  }
+
+  .path-features li {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+  }
+
+  .path-features strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .path-features code {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--cream-2);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+
+  .tick {
+    flex-shrink: 0;
+    font-size: 0.85rem;
+    color: var(--vermillion);
+    padding-top: 0.3rem;
+    line-height: 1;
+  }
+
+  .path-oss .tick {
+    color: var(--ochre);
+  }
+
+  .path-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .path-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--ink);
+    padding: 0.85rem 1.25rem;
+    background: var(--cream-2);
+    border: 1px solid var(--border-strong);
+    border-radius: 2px;
+    transition: all 0.3s;
+    align-self: flex-start;
+  }
+
+  .path-cta:hover {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+
+  .path-cta-primary {
+    background: var(--ink);
+    color: var(--cream);
+    border-color: var(--ink);
+  }
+
+  .path-cta-primary:hover {
+    background: var(--vermillion);
+    border-color: var(--vermillion);
+  }
+
+  .path-cta .arrow {
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .path-cta:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  .path-audience {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    color: var(--ink-3);
+    max-width: 42ch;
+  }
+
+  .path-audience .for {
+    font-weight: 500;
+    color: var(--ink-2);
+    margin-right: 0.25rem;
+  }
+
+  /* Footer line ========================================================== */
+
+  .same-product {
+    margin-top: 3rem;
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--ink-3);
+    font-style: italic;
+    font-variation-settings: 'opsz' 24, 'SOFT' 60;
+  }
+
+  .same-accent {
+    color: var(--vermillion);
+    font-style: normal;
+    font-variation-settings: 'opsz' 24, 'SOFT' 0;
+    font-weight: 500;
+    margin-right: 0.4rem;
+  }
+
+  /* Responsive =========================================================== */
+
+  @media (max-width: 900px) {
+    .twopaths-head {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+
+    .paths-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

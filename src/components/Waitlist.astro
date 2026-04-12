@@ -1,0 +1,291 @@
+---
+interface Props {
+  variant?: 'light' | 'dark';
+  placeholder?: string;
+  buttonLabel?: string;
+  compact?: boolean;
+}
+
+const {
+  variant = 'light',
+  placeholder = 'you@company.com',
+  buttonLabel = 'Join the waitlist',
+  compact = false,
+} = Astro.props;
+---
+
+<form class:list={['waitlist-form', variant, { compact }]} data-waitlist>
+  <div class="waitlist-fields">
+    <label class="sr-only" for="waitlist-email">Email address</label>
+    <input
+      id="waitlist-email"
+      type="email"
+      name="email"
+      autocomplete="email"
+      required
+      placeholder={placeholder}
+      class="waitlist-input"
+    />
+    <!-- Honeypot — bots fill this, humans don't see it -->
+    <input type="text" name="company_name" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
+    <button type="submit" class="waitlist-btn">
+      <span class="btn-label">{buttonLabel}</span>
+      <span class="arrow">→</span>
+    </button>
+  </div>
+  <p class="waitlist-hint">
+    No spam. One email when the cloud opens. Unsubscribe anytime.
+  </p>
+  <div class="waitlist-success" role="status" aria-live="polite">
+    <span class="success-mark">✓</span>
+    <span>You're on the list. We'll email you when Koji Cloud opens.</span>
+  </div>
+  <div class="waitlist-error" role="alert">
+    Something went wrong. Try again, or <a href="mailto:hello@getkoji.dev">email us directly</a>.
+  </div>
+</form>
+
+<style>
+  .waitlist-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .waitlist-fields {
+    display: flex;
+    gap: 0.5rem;
+    background: var(--cream);
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+    padding: 0.4rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .waitlist-fields:focus-within {
+    border-color: var(--vermillion);
+    box-shadow: 0 0 0 3px rgba(195, 53, 32, 0.12);
+  }
+
+  .waitlist-input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    color: var(--ink);
+    padding: 0.7rem 0.85rem;
+    outline: none;
+    min-width: 0;
+  }
+
+  .waitlist-input::placeholder {
+    color: var(--ink-4);
+  }
+
+  .waitlist-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.7rem 1.25rem;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    font-weight: 500;
+    border-radius: 2px;
+    transition: background 0.3s, transform 0.3s var(--ease-out);
+    white-space: nowrap;
+  }
+
+  .waitlist-btn:hover {
+    background: var(--vermillion);
+  }
+
+  .waitlist-btn .arrow {
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .waitlist-btn:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  .waitlist-hint {
+    font-size: 0.78rem;
+    color: var(--ink-3);
+    padding-left: 0.25rem;
+  }
+
+  .waitlist-success,
+  .waitlist-error {
+    display: none;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem;
+    border-radius: 3px;
+    font-size: 0.9rem;
+  }
+
+  .waitlist-success {
+    background: var(--cream-2);
+    border: 1px solid var(--border-strong);
+    color: var(--ink);
+  }
+
+  .success-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--vermillion);
+    color: var(--cream);
+    font-size: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .waitlist-error {
+    background: rgba(195, 53, 32, 0.06);
+    border: 1px solid rgba(195, 53, 32, 0.22);
+    color: var(--ink);
+  }
+
+  .waitlist-error a {
+    color: var(--vermillion);
+    text-decoration: underline;
+  }
+
+  /* Submitted state */
+  .waitlist-form.submitted .waitlist-fields,
+  .waitlist-form.submitted .waitlist-hint {
+    display: none;
+  }
+
+  .waitlist-form.submitted .waitlist-success {
+    display: flex;
+  }
+
+  .waitlist-form.errored .waitlist-error {
+    display: flex;
+  }
+
+  /* Dark variant — for use on dark backgrounds */
+  .waitlist-form.dark .waitlist-fields {
+    background: rgba(244, 238, 226, 0.06);
+    border-color: rgba(244, 238, 226, 0.2);
+  }
+
+  .waitlist-form.dark .waitlist-fields:focus-within {
+    border-color: var(--vermillion);
+    box-shadow: 0 0 0 3px rgba(195, 53, 32, 0.2);
+  }
+
+  .waitlist-form.dark .waitlist-input {
+    color: var(--cream);
+  }
+
+  .waitlist-form.dark .waitlist-input::placeholder {
+    color: var(--cream-4);
+  }
+
+  .waitlist-form.dark .waitlist-btn {
+    background: var(--vermillion);
+    color: var(--cream);
+  }
+
+  .waitlist-form.dark .waitlist-btn:hover {
+    background: var(--cream);
+    color: var(--ink);
+  }
+
+  .waitlist-form.dark .waitlist-hint {
+    color: var(--cream-4);
+  }
+
+  .waitlist-form.dark .waitlist-success {
+    background: rgba(244, 238, 226, 0.06);
+    border-color: rgba(244, 238, 226, 0.2);
+    color: var(--cream);
+  }
+
+  @media (max-width: 560px) {
+    .waitlist-fields {
+      flex-direction: column;
+      padding: 0.5rem;
+    }
+
+    .waitlist-btn {
+      justify-content: center;
+    }
+  }
+</style>
+
+<script>
+  // TODO: wire to Cloudflare Worker → Resend Audiences API
+  // Endpoint: POST /api/waitlist { email: string }
+  // For now, the form shows success optimistically. Replace with real fetch when backend is ready.
+
+  const forms = document.querySelectorAll<HTMLFormElement>('[data-waitlist]');
+
+  forms.forEach((form) => {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(form);
+      const email = (fd.get('email') as string)?.trim();
+      const honeypot = fd.get('company_name');
+
+      // Silently drop bot submissions
+      if (honeypot) {
+        form.classList.add('submitted');
+        return;
+      }
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        form.classList.add('errored');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+
+        if (res.ok) {
+          form.classList.add('submitted');
+        } else if (res.status === 404) {
+          // Backend not wired yet — show optimistic success during pre-launch
+          form.classList.add('submitted');
+          console.warn('[waitlist] /api/waitlist returned 404 — add Cloudflare Worker to persist signups');
+        } else {
+          form.classList.add('errored');
+        }
+      } catch {
+        // Network error — during pre-launch, still show success
+        form.classList.add('submitted');
+      }
+    });
+  });
+</script>
