@@ -24,34 +24,37 @@
     <div class="split">
       <div class="pane">
         <div class="pane-header">
-          <span class="file-name">schemas/insurance.yaml</span>
+          <span class="file-name">schemas/invoice.yaml</span>
           <span class="file-badge">INPUT</span>
         </div>
         <div class="code-block">
-<pre><code><span class="tok-key">name</span>: insurance_policy
-<span class="tok-key">description</span>: <span class="tok-str">Commercial property policy</span>
+<pre><code><span class="tok-key">name</span>: invoice
+<span class="tok-key">description</span>: <span class="tok-str">Commercial invoice extraction</span>
 
 <span class="tok-key">fields</span>:
-  <span class="tok-key">policy_number</span>:
+  <span class="tok-key">invoice_number</span>:
     <span class="tok-key">type</span>: <span class="tok-str">string</span>
     <span class="tok-key">required</span>: <span class="tok-num">true</span>
-    <span class="tok-key">description</span>: <span class="tok-str">Unique policy identifier</span>
+    <span class="tok-key">description</span>: <span class="tok-str">Unique invoice identifier</span>
 
-  <span class="tok-key">effective_date</span>:
+  <span class="tok-key">invoice_date</span>:
     <span class="tok-key">type</span>: <span class="tok-str">date</span>
-    <span class="tok-key">hints</span>:
-      <span class="tok-key">look_in</span>: [<span class="tok-str">declarations</span>]
+    <span class="tok-key">required</span>: <span class="tok-num">true</span>
 
-  <span class="tok-key">coverage</span>:
-    <span class="tok-key">type</span>: <span class="tok-str">object</span>
-    <span class="tok-key">properties</span>:
-      <span class="tok-key">property</span>: &#123; <span class="tok-key">type</span>: <span class="tok-str">number</span> &#125;
-      <span class="tok-key">liability</span>: &#123; <span class="tok-key">type</span>: <span class="tok-str">number</span> &#125;
-      <span class="tok-key">deductible</span>: &#123; <span class="tok-key">type</span>: <span class="tok-str">number</span> &#125;
+  <span class="tok-key">total_amount</span>:
+    <span class="tok-key">type</span>: <span class="tok-str">number</span>
+    <span class="tok-key">required</span>: <span class="tok-num">true</span>
+    <span class="tok-key">description</span>: <span class="tok-str">Grand total including tax</span>
 
-  <span class="tok-key">carrier</span>:
-    <span class="tok-key">type</span>: <span class="tok-str">mapping</span>
-    <span class="tok-key">values</span>: [<span class="tok-str">Chubb</span>, <span class="tok-str">Travelers</span>, <span class="tok-str">Hartford</span>]</code></pre>
+  <span class="tok-key">line_items</span>:
+    <span class="tok-key">type</span>: <span class="tok-str">array</span>
+    <span class="tok-key">description</span>: <span class="tok-str">Items purchased</span>
+    <span class="tok-key">items</span>:
+      <span class="tok-key">type</span>: <span class="tok-str">object</span>
+      <span class="tok-key">properties</span>:
+        <span class="tok-key">description</span>: &#123; <span class="tok-key">type</span>: <span class="tok-str">string</span> &#125;
+        <span class="tok-key">quantity</span>: &#123; <span class="tok-key">type</span>: <span class="tok-str">number</span> &#125;
+        <span class="tok-key">amount</span>: &#123; <span class="tok-key">type</span>: <span class="tok-str">number</span> &#125;</code></pre>
         </div>
       </div>
 
@@ -63,25 +66,31 @@
 
       <div class="pane">
         <div class="pane-header">
-          <span class="file-name">output/policy-a4f2.json</span>
+          <span class="file-name">output/invoice.json</span>
           <span class="file-badge accent">OUTPUT</span>
         </div>
         <div class="code-block">
 <pre><code>&#123;
-  <span class="tok-key">"policy_number"</span>: <span class="tok-str">"CPL-2026-887421"</span>,
-  <span class="tok-key">"effective_date"</span>: <span class="tok-str">"2026-04-01"</span>,
-  <span class="tok-key">"coverage"</span>: &#123;
-    <span class="tok-key">"property"</span>: <span class="tok-num">2500000</span>,
-    <span class="tok-key">"liability"</span>: <span class="tok-num">1000000</span>,
-    <span class="tok-key">"deductible"</span>: <span class="tok-num">5000</span>
-  &#125;,
-  <span class="tok-key">"carrier"</span>: <span class="tok-str">"Chubb"</span>,
-  <span class="tok-key">"_confidence"</span>: &#123;
-    <span class="tok-key">"policy_number"</span>: <span class="tok-num">0.99</span>,
-    <span class="tok-key">"effective_date"</span>: <span class="tok-num">0.97</span>,
-    <span class="tok-key">"coverage"</span>: <span class="tok-num">0.94</span>,
-    <span class="tok-key">"carrier"</span>: <span class="tok-num">0.98</span>
-  &#125;
+  <span class="tok-key">"invoice_number"</span>: <span class="tok-str">"INV-2026-0042"</span>,
+  <span class="tok-key">"invoice_date"</span>: <span class="tok-str">"2026-03-15"</span>,
+  <span class="tok-key">"total_amount"</span>: <span class="tok-num">4250.00</span>,
+  <span class="tok-key">"line_items"</span>: [
+    &#123;
+      <span class="tok-key">"description"</span>: <span class="tok-str">"Strategic consulting"</span>,
+      <span class="tok-key">"quantity"</span>: <span class="tok-num">8</span>,
+      <span class="tok-key">"amount"</span>: <span class="tok-num">1600</span>
+    &#125;,
+    &#123;
+      <span class="tok-key">"description"</span>: <span class="tok-str">"Documentation package"</span>,
+      <span class="tok-key">"quantity"</span>: <span class="tok-num">1</span>,
+      <span class="tok-key">"amount"</span>: <span class="tok-num">350</span>
+    &#125;,
+    &#123;
+      <span class="tok-key">"description"</span>: <span class="tok-str">"Training workshop"</span>,
+      <span class="tok-key">"quantity"</span>: <span class="tok-num">2</span>,
+      <span class="tok-key">"amount"</span>: <span class="tok-num">1150</span>
+    &#125;
+  ]
 &#125;</code></pre>
         </div>
       </div>
