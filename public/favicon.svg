@@ -1,12 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
   <rect width="128" height="128" fill="#F4EEE2"/>
-  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6">
-    <line stroke="#C33520" x1="52" y1="112" x2="52" y2="60"/>
-    <path stroke="#171410" d="M52,60 Q52,48 74,34"/>
-    <path stroke="#171410" d="M74,34 Q82,28 92,18"/>
-    <path stroke="#171410" d="M52,60 Q48,48 36,38"/>
-    <path stroke="#171410" d="M52,78 Q46,70 34,66"/>
-    <path stroke="#171410" d="M52,60 Q54,44 58,30"/>
-    <path stroke="#171410" d="M74,34 Q72,26 68,20"/>
-  </g>
+  <ellipse cx="40" cy="84" rx="14" ry="26" transform="rotate(-22 40 84)" fill="#171410"/>
+  <ellipse cx="88" cy="84" rx="14" ry="26" transform="rotate(22 88 84)" fill="#171410"/>
+  <ellipse cx="64" cy="42" rx="14" ry="26" fill="#C33520"/>
 </svg>

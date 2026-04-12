@@ -23,7 +23,7 @@ import BrandMark from './BrandMark.astro';
       </p>
 
       <div class="hero-cta reveal d4">
-        <a href="#pricing" class="btn btn-primary">
+        <a href="/waitlist" class="btn btn-primary">
           Start free in the cloud
           <span class="arrow">→</span>
         </a>
@@ -101,16 +101,23 @@ import BrandMark from './BrandMark.astro';
     margin-top: 0.75rem;
   }
 
-  /* Brand mark — large, quiet, positioned in the negative space ============ */
+  /* Brand mark — large, quiet, positioned in the negative space.
+     Rice grains are filled shapes so they need much lower opacity than the
+     old stroke mark. Custom keyframe because the global fadeIn ends at 1. */
+
+  @keyframes heroMarkFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 0.12; }
+  }
 
   .hero-mark {
     position: absolute;
-    top: -40px;
-    right: -40px;
+    top: -60px;
+    right: -90px;
     z-index: 0;
-    opacity: 0.14;
+    opacity: 0.12;
     pointer-events: none;
-    animation: fadeIn 1.8s var(--ease-out) 0.3s both;
+    animation: heroMarkFadeIn 1.8s var(--ease-out) 0.3s both;
   }
 
   /* Snippet =============================================================== */
@@ -231,9 +238,9 @@ import BrandMark from './BrandMark.astro';
 
   @media (max-width: 960px) {
     .hero-mark {
-      top: -20px;
-      right: -80px;
-      opacity: 0.08;
+      top: -40px;
+      right: -120px;
+      opacity: 0.04;
     }
 
     .hero-mark svg {
