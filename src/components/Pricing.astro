@@ -1,6 +1,4 @@
 ---
-import Waitlist from './Waitlist.astro';
-
 const tiers = [
   {
     name: 'Free',
@@ -154,7 +152,7 @@ const tiers = [
                 <span class="arrow">→</span>
               </a>
             ) : (
-              <a href="#waitlist" class="tier-cta">
+              <a href="/waitlist" class="tier-cta">
                 {tier.cta}
                 <span class="arrow">→</span>
               </a>
@@ -162,21 +160,6 @@ const tiers = [
           </footer>
         </article>
       ))}
-    </div>
-
-    <div class="pricing-waitlist" id="waitlist">
-      <div class="waitlist-inner">
-        <div class="waitlist-copy">
-          <p class="eyebrow">
-            <span>Cloud is launching soon</span>
-          </p>
-          <h3 class="display">Get early access.</h3>
-          <p class="body-lg">
-            Koji Cloud opens in the next few weeks. Join the waitlist and we'll email you the moment it's live — with a founding-user discount on your first three months of Pro.
-          </p>
-        </div>
-        <Waitlist placeholder="you@company.com" buttonLabel="Join the waitlist" />
-      </div>
     </div>
 
     <p class="pricing-footnote">
@@ -460,41 +443,6 @@ const tiers = [
     transform: translateX(3px);
   }
 
-  /* Waitlist block ======================================================= */
-
-  .pricing-waitlist {
-    margin-top: 4.5rem;
-    padding: 3rem 3.5rem;
-    background: var(--cream-2);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    scroll-margin-top: 6rem;
-  }
-
-  .waitlist-inner {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 3rem;
-    align-items: center;
-  }
-
-  .waitlist-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 0.85rem;
-  }
-
-  .waitlist-copy h3 {
-    font-size: clamp(1.5rem, 2.6vw, 2rem);
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    font-weight: 400;
-  }
-
-  .waitlist-copy .body-lg {
-    max-width: 48ch;
-  }
-
   /* Footnote ============================================================= */
 
   .pricing-footnote {
@@ -529,15 +477,6 @@ const tiers = [
     .pricing-head {
       grid-template-columns: 1fr;
       gap: 2rem;
-    }
-
-    .waitlist-inner {
-      grid-template-columns: 1fr;
-      gap: 2rem;
-    }
-
-    .pricing-waitlist {
-      padding: 2rem 1.75rem;
     }
   }
 
