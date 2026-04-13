@@ -1,0 +1,243 @@
+---
+const items = [
+  {
+    label: 'What "accuracy" means',
+    body: 'Field-level exact match after normalization. For each field in the schema, we check whether the extracted value matches the expected value. Dates, numbers, currencies, and enum mappings are fuzzy-matched (<code>"April 12, 2026"</code> ≡ <code>"2026-04-12"</code>). "Accuracy" reported on this page is <strong>fields correct ÷ fields checked</strong> — not document-level completion.',
+  },
+  {
+    label: 'What\'s in the corpus',
+    body: 'Real documents, not synthetic. Public-domain sources only: SEC EDGAR, IRS forms, state insurance filings, SROIE, court records. Every document has a committed schema and a ground-truth JSON of expected values. No PII, no proprietary content, no customer data. Rotating mix of clean digital PDFs, scanned PDFs, and multi-column layouts.',
+  },
+  {
+    label: 'How runs are reproducible',
+    body: 'Each run pins the model version (e.g. <code>gpt-4o-mini-2024-07-18</code>), the prompt version, and the Koji commit SHA. Temperature 0. Results write to <code>corpus/.benchmarks/&lt;date&gt;/&lt;category&gt;/&lt;model&gt;.json</code> with full traceability — you can diff two runs to see exactly what changed.',
+  },
+  {
+    label: 'How we aggregate',
+    body: 'Per-category accuracy weights by <strong>fields</strong>, not documents. A category with 200 small docs doesn\'t dominate one with 20 large docs. The overall number is a weighted average across all categories. The trend line is one data point per full corpus run.',
+  },
+];
+
+const notMeasured = [
+  'Latency under parallel load',
+  'Cost at scale across many concurrent jobs',
+  'Schema authoring difficulty (varies per domain)',
+  'Edge cases not yet in the corpus',
+];
+---
+
+<section class="bench-methodology">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">01</span>
+        <span>Methodology</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="method-grid">
+      <div class="method-head">
+        <h2 class="display">
+          How we<br/>
+          <em class="accent">measure this.</em>
+        </h2>
+        <p class="lede">
+          The number at the top of this page isn't a marketing claim — it's a weighted aggregate over a specific corpus, measured with a specific definition of "accuracy," produced by a specific pipeline run on specific models. Here's the fine print.
+        </p>
+      </div>
+
+      <ol class="method-items">
+        {items.map((item, i) => (
+          <li class="method-item">
+            <span class="method-num">0{i + 1}</span>
+            <div class="method-body">
+              <h3 class="method-label">{item.label}</h3>
+              <p class="method-text" set:html={item.body} />
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+
+    <aside class="not-measured">
+      <p class="not-measured-label">Honest about the gaps — things this benchmark does <em>not</em> capture</p>
+      <ul>
+        {notMeasured.map((item) => <li>{item}</li>)}
+      </ul>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .bench-methodology {
+    padding: var(--section-pad) 0;
+    background: var(--cream-2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .method-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 4.5rem;
+    align-items: start;
+  }
+
+  .method-head h2 {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    text-wrap: balance;
+  }
+
+  .method-head .accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .method-head .lede {
+    max-width: 44ch;
+  }
+
+  .method-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .method-item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .method-item:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .method-num {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--vermillion);
+    font-variation-settings: 'opsz' 12, 'SOFT' 50;
+    line-height: 1;
+    padding-top: 0.15rem;
+  }
+
+  .method-label {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 72, 'SOFT' 40;
+    font-size: 1.2rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin: 0 0 0.5rem;
+    line-height: 1.2;
+  }
+
+  .method-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+    margin: 0;
+    max-width: 56ch;
+  }
+
+  .method-text :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    background: var(--cream);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+    color: var(--ink);
+    border: 1px solid var(--border);
+  }
+
+  .method-text :global(strong) {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* "What we don't measure" honest-gaps block */
+  .not-measured {
+    margin-top: 4rem;
+    padding: 1.75rem 2rem;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--ochre);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .not-measured-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 0.75rem;
+  }
+
+  .not-measured-label em {
+    color: var(--ochre);
+    font-style: italic;
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 12, 'SOFT' 80;
+    font-size: 1em;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .not-measured ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 2rem;
+  }
+
+  .not-measured li {
+    position: relative;
+    padding-left: 1rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--ink-2);
+  }
+
+  .not-measured li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--ink-4);
+  }
+
+  @media (max-width: 1000px) {
+    .method-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .not-measured ul {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+</style>

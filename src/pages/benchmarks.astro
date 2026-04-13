@@ -18,6 +18,7 @@ import Layout from '../layouts/Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import BenchHero from '../components/benchmarks/BenchHero.astro';
+import BenchMethodology from '../components/benchmarks/BenchMethodology.astro';
 import BenchCategories from '../components/benchmarks/BenchCategories.astro';
 import BenchModels from '../components/benchmarks/BenchModels.astro';
 import BenchTrend from '../components/benchmarks/BenchTrend.astro';
@@ -38,6 +39,7 @@ import data from '../data/benchmarks.json';
       totalFields={data.total_fields_checked}
       updated={data.updated}
     />
+    <BenchMethodology />
     <BenchCategories categories={data.categories} primaryModel={data.primary_model} />
     <BenchModels models={data.models} />
     <BenchTrend history={data.history} />
