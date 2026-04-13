@@ -1,0 +1,48 @@
+---
+/**
+ * Benchmarks / accuracy page.
+ *
+ * Reads data at build time from src/data/benchmarks.json. Update path:
+ *
+ *   1. accuracy agent runs `koji bench` against the corpus
+ *   2. runs `koji bench --emit-latest` (once oss-17 ships) to aggregate
+ *      into corpus/.benchmarks/latest.json
+ *   3. that file gets copied into website/src/data/benchmarks.json
+ *      (manual for now; root-17 will automate via corpus → website
+ *      deploy hook)
+ *   4. this page rebuilds with the fresh numbers
+ *
+ * Schema is stable; new categories/models append to the arrays.
+ */
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BenchHero from '../components/benchmarks/BenchHero.astro';
+import BenchCategories from '../components/benchmarks/BenchCategories.astro';
+import BenchModels from '../components/benchmarks/BenchModels.astro';
+import BenchTrend from '../components/benchmarks/BenchTrend.astro';
+import BenchCaveats from '../components/benchmarks/BenchCaveats.astro';
+import BenchCta from '../components/benchmarks/BenchCta.astro';
+import data from '../data/benchmarks.json';
+---
+
+<Layout
+  title="Benchmarks — Koji"
+  description={`Koji's extraction pipeline is validated against a public corpus of ${data.total_documents.toLocaleString()} real-world documents. Current overall accuracy: ${(data.overall_accuracy * 100).toFixed(1)}%.`}
+>
+  <Header />
+  <main>
+    <BenchHero
+      totalDocuments={data.total_documents}
+      overallAccuracy={data.overall_accuracy}
+      totalFields={data.total_fields_checked}
+      updated={data.updated}
+    />
+    <BenchCategories categories={data.categories} primaryModel={data.primary_model} />
+    <BenchModels models={data.models} />
+    <BenchTrend history={data.history} />
+    <BenchCaveats />
+    <BenchCta />
+  </main>
+  <Footer />
+</Layout>

@@ -1,0 +1,115 @@
+---
+---
+
+<section class="bench-cta">
+  <div class="container">
+    <div class="cta-inner">
+      <p class="eyebrow">
+        <span>Run it yourself</span>
+      </p>
+
+      <h2 class="display">
+        Don't trust the numbers?<br/>
+        <em class="accent">Reproduce them.</em>
+      </h2>
+
+      <p class="lede">
+        The corpus is public. The CLI is open source. Clone the repo, run <code>koji bench</code> against any category, and compare your numbers to ours. No sign-up, no vendor lock-in, no "contact sales to see the benchmark."
+      </p>
+
+      <div class="cta-code">
+        <pre><span class="tok-prompt">$</span> git clone https://github.com/getkoji/corpus
+<span class="tok-prompt">$</span> pip install koji-cli
+<span class="tok-prompt">$</span> koji bench --corpus ./corpus --category insurance</pre>
+      </div>
+
+      <div class="cta-actions">
+        <a href="https://github.com/getkoji/corpus" class="btn btn-primary">
+          Browse the corpus
+          <span class="arrow">→</span>
+        </a>
+        <a href="https://docs.getkoji.dev/getting-started/" class="btn btn-ghost">
+          Install Koji
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bench-cta {
+    padding: var(--section-pad) 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .cta-inner {
+    max-width: 820px;
+  }
+
+  h2.display {
+    font-size: clamp(2.25rem, 5.5vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin: 0.75rem 0 1.25rem;
+    text-wrap: balance;
+  }
+
+  .display .accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .lede {
+    max-width: 62ch;
+    margin-bottom: 2rem;
+  }
+
+  .lede code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--cream-2);
+    padding: 0.1em 0.4em;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+
+  .cta-code {
+    background: var(--ink);
+    color: var(--cream-2);
+    padding: 1.5rem 1.75rem;
+    border-radius: 3px;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow-md);
+    overflow-x: auto;
+  }
+
+  .cta-code pre {
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    line-height: 1.8;
+    color: var(--cream-2);
+    margin: 0;
+  }
+
+  .tok-prompt {
+    color: var(--vermillion);
+    user-select: none;
+  }
+
+  .cta-actions {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  @media (max-width: 560px) {
+    .cta-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .btn {
+      justify-content: center;
+    }
+  }
+</style>

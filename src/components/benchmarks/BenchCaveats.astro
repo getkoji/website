@@ -1,0 +1,110 @@
+---
+---
+
+<section class="bench-caveats">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">04</span>
+        <span>Honest numbers</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="caveats-grid">
+      <h2 class="display">
+        We publish regressions too.
+      </h2>
+
+      <div class="caveats-prose">
+        <p>
+          Accuracy numbers from vendor-published benchmarks are usually theoretical: they pick the best documents, the best schema, and the best model, run it once, and screenshot the result. We don't do that.
+        </p>
+
+        <p>
+          The corpus is <strong>public and versioned</strong>. Every document, every schema, every expected output, every nightly CI run — all committed to <a href="https://github.com/getkoji/corpus">getkoji/corpus</a>. When we break something, the numbers drop and the PR gets flagged before it merges. When we fix something, the numbers move up and you can diff the run to see why.
+        </p>
+
+        <p>
+          If you find a document type where Koji underperforms, <strong>submit it to the corpus</strong>. We'll add it, run it against the pipeline, and publish the result — regression or not. That's the whole point.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bench-caveats {
+    padding: var(--section-pad) 0;
+    background: var(--ink);
+    color: var(--cream);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .bench-caveats .section-label {
+    color: var(--cream-4);
+  }
+
+  .bench-caveats .section-label .num {
+    color: var(--vermillion);
+  }
+
+  .bench-caveats .rule {
+    border-top-color: rgba(244, 238, 226, 0.18);
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .caveats-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.2fr;
+    gap: 4rem;
+    align-items: start;
+  }
+
+  .caveats-grid h2 {
+    font-size: clamp(2.25rem, 5.5vw, 4.25rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: var(--cream);
+    text-wrap: balance;
+  }
+
+  .caveats-prose {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--cream-3);
+    max-width: 56ch;
+  }
+
+  .caveats-prose strong {
+    color: var(--cream);
+    font-weight: 500;
+  }
+
+  .caveats-prose a {
+    color: var(--vermillion);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+    font-weight: 500;
+  }
+
+  @media (max-width: 900px) {
+    .caveats-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+</style>
