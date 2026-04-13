@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .card {
+      width: 1200px;
+      height: 630px;
+      background: #F4EEE2;
+      position: absolute;
+      top: 0;
+      left: 0;
+      overflow: hidden;
+      color: #171410;
+      font-family: 'Instrument Sans', -apple-system, sans-serif;
+      box-sizing: border-box;
+    }
+
+    /* Layout the three content rows via flex, EXCLUDING the bg-mark
+       which is absolutely positioned behind them. */
+    .card-inner {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 72px 96px 58px;
+      box-sizing: border-box;
+    }
+
+    /* Large atmospheric brand mark behind content, top-right, very faint */
+    .bg-mark {
+      position: absolute;
+      top: -120px;
+      right: -140px;
+      width: 780px;
+      height: 780px;
+      opacity: 0.09;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Top: brand lockup */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand .mark {
+      width: 64px;
+      height: 64px;
+    }
+
+    .wordmark {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144, 'SOFT' 30;
+      font-size: 64px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      color: #171410;
+      line-height: 1;
+    }
+
+    /* Middle: headline + subline */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .headline {
+      margin: 0;
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144, 'SOFT' 50;
+      font-size: 92px;
+      font-weight: 500;
+      line-height: 1.02;
+      letter-spacing: -0.028em;
+      color: #171410;
+    }
+
+    .headline .accent {
+      color: #C33520;
+      font-style: italic;
+      font-variation-settings: 'opsz' 144, 'SOFT' 100;
+    }
+
+    .subline {
+      margin: 0;
+      max-width: 900px;
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 400;
+      line-height: 1.45;
+      color: #3A3328;
+    }
+
+    /* Bottom: footer bar */
+    .footer {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding-top: 18px;
+      border-top: 1px solid rgba(23, 20, 16, 0.12);
+    }
+
+    .footer .eyebrow {
+      color: #C33520;
+    }
+
+    .footer .eyebrow .dot {
+      color: #C9BC9E;
+      margin: 0 0.6em;
+    }
+
+    .footer .url {
+      color: #665C4B;
+      text-transform: none;
+      letter-spacing: 0.08em;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <!-- Absolutely positioned atmospheric mark, BEHIND the content layer -->
+    <svg class="bg-mark" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="40" cy="84" rx="12" ry="25" transform="rotate(-22 40 84)" fill="#171410"/>
+      <ellipse cx="88" cy="84" rx="12" ry="25" transform="rotate(22 88 84)" fill="#171410"/>
+      <ellipse cx="64" cy="42" rx="12" ry="25" fill="#C33520"/>
+    </svg>
+
+    <!-- Absolutely positioned content layer, sized exactly to the card -->
+    <div class="card-inner">
+      <!-- Top: brand lockup -->
+      <div class="brand">
+        <svg class="mark" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="40" cy="84" rx="12" ry="25" transform="rotate(-22 40 84)" fill="#171410"/>
+          <ellipse cx="88" cy="84" rx="12" ry="25" transform="rotate(22 88 84)" fill="#171410"/>
+          <ellipse cx="64" cy="42" rx="12" ry="25" fill="#C33520"/>
+        </svg>
+        <span class="wordmark">koji</span>
+      </div>
+
+      <!-- Middle: headline + subline -->
+      <div class="content">
+        <h1 class="headline">
+          Documents in.<br>
+          <span class="accent">Structured data</span> out.
+        </h1>
+        <p class="subline">
+          Open source document processing platform. Schemas in, structured JSON out. Self-hosted or managed.
+        </p>
+      </div>
+
+      <!-- Bottom: footer bar -->
+      <div class="footer">
+        <span class="eyebrow">
+          Open source
+          <span class="dot">·</span>
+          Apache 2.0
+        </span>
+        <span class="url">getkoji.dev</span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
