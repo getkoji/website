@@ -1,5 +1,33 @@
 ---
 import BrandMark from './BrandMark.astro';
+
+/**
+ * Fetch the live GitHub star count at build time and bake it into the HTML.
+ * No API key needed — public repos are unauthenticated (60 req/hr per IP,
+ * plenty for Cloudflare Pages builds). If the fetch fails (rate limit,
+ * network issue, repo not public yet), we render the Star button without
+ * a count rather than showing a stale or fake number.
+ */
+let stars: number | null = null;
+try {
+  const res = await fetch('https://api.github.com/repos/getkoji/koji', {
+    headers: { 'User-Agent': 'getkoji-website-build' },
+  });
+  if (res.ok) {
+    const data = await res.json();
+    if (typeof data.stargazers_count === 'number') {
+      stars = data.stargazers_count;
+    }
+  }
+} catch {
+  // Swallow — fall through to null. The button still links to GitHub.
+}
+
+const formatStars = (n: number): string => {
+  if (n >= 10000) return Math.round(n / 1000) + 'k';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'k';
+  return n.toString();
+};
 ---
 
 <header class="site-header">
@@ -21,8 +49,12 @@ import BrandMark from './BrandMark.astro';
 
       <a href="https://github.com/getkoji/koji" class="nav-cta">
         <span>★ Star</span>
-        <span class="cta-divider"></span>
-        <span class="cta-count">1.2k</span>
+        {stars !== null && stars > 0 && (
+          <>
+            <span class="cta-divider"></span>
+            <span class="cta-count">{formatStars(stars)}</span>
+          </>
+        )}
       </a>
     </nav>
   </div>
