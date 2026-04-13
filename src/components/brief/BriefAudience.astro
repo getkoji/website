@@ -1,0 +1,86 @@
+---
+interface Audience {
+  who: string;
+  what: string;
+}
+
+interface Props {
+  sectionLabel?: string;
+  audiences?: Audience[];
+}
+
+const {
+  sectionLabel = 'Who uses it',
+  audiences = [],
+} = Astro.props;
+---
+
+<section class="brief-audience brief-section">
+  <p class="section-label">{sectionLabel}</p>
+  <ul class="audience-list">
+    {audiences.map((a) => (
+      <li>
+        <strong>{a.who}</strong>
+        <span class="what">{a.what}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #665C4B;
+    margin: 0 0 0.7rem;
+  }
+
+  .audience-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .audience-list li {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+    color: #3A3328;
+  }
+
+  .audience-list strong {
+    font-family: 'Instrument Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #171410;
+    line-height: 1.2;
+    margin-bottom: 0.25rem;
+  }
+
+  .audience-list .what {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 24, 'SOFT' 80;
+    font-style: italic;
+    font-size: 0.98rem;
+    color: #665C4B;
+    line-height: 1.3;
+  }
+
+  @media print {
+    .section-label { font-size: 7pt; margin: 0 0 0.14in; }
+    .audience-list { gap: 0.2in; }
+    .audience-list strong {
+      font-size: 9.5pt;
+      margin-bottom: 0.05in;
+    }
+    .audience-list .what {
+      font-size: 9pt;
+    }
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+interface Pillar {
+  title: string;
+  body: string;
+}
+
+interface Props {
+  pillars?: Pillar[];
+  sectionLabel?: string;
+}
+
+const {
+  sectionLabel = 'What it is',
+  pillars = [],
+} = Astro.props;
+---
+
+<section class="brief-pillars brief-section">
+  <p class="section-label">{sectionLabel}</p>
+  <div class="pillars-grid">
+    {pillars.map((p) => (
+      <article class="brief-pillar">
+        <h3 class="pillar-title">{p.title}</h3>
+        <p class="pillar-body">{p.body}</p>
+      </article>
+    ))}
+  </div>
+</section>
+
+<style>
+  .brief-pillars {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #665C4B;
+    margin: 0 0 0.7rem;
+  }
+
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+
+  .brief-pillar {
+    padding-top: 0.75rem;
+    border-top: 2px solid #C33520;
+  }
+
+  .pillar-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 96, 'SOFT' 50;
+    font-size: 1.05rem;
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #171410;
+    margin: 0 0 0.4rem;
+  }
+
+  .pillar-body {
+    font-size: 0.88rem;
+    line-height: 1.45;
+    color: #3A3328;
+    margin: 0;
+  }
+
+  @media print {
+    .section-label { font-size: 7pt; margin: 0 0 0.08in; }
+    .pillars-grid { gap: 0.15in; }
+    .brief-pillar { padding-top: 0.08in; }
+    .pillar-title {
+      font-size: 10pt;
+      margin: 0 0 0.05in;
+      line-height: 1.15;
+    }
+    .pillar-body {
+      font-size: 8.5pt;
+      line-height: 1.35;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .pillars-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

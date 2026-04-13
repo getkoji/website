@@ -1,0 +1,135 @@
+---
+interface Tier {
+  name: string;
+  price: string;
+  docs: string;
+  pages: string;
+  overage?: string;
+}
+
+interface Props {
+  sectionLabel?: string;
+  tiers?: Tier[];
+}
+
+const {
+  sectionLabel = 'Pricing',
+  tiers = [],
+} = Astro.props;
+---
+
+<section class="brief-pricing brief-section">
+  <p class="section-label">{sectionLabel}</p>
+  <table class="pricing-table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Docs / mo</th>
+        <th>Pages / doc</th>
+        <th class="text-right">Price</th>
+      </tr>
+    </thead>
+    <tbody>
+      {tiers.map((t) => (
+        <tr class="brief-pricing-row">
+          <th scope="row">{t.name}</th>
+          <td class="mono">{t.docs}</td>
+          <td class="mono">{t.pages}</td>
+          <td class="mono text-right">{t.price}{t.overage && <span class="overage"> + {t.overage}</span>}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</section>
+
+<style>
+  /* No alignment override needed — pricing sits in its own row next to
+   * Who Uses It, which has comparable height. */
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #665C4B;
+    margin: 0 0 0.55rem;
+  }
+
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  .pricing-table thead tr {
+    border-bottom: 1px solid rgba(23, 20, 16, 0.22);
+  }
+
+  .pricing-table thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.66rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #665C4B;
+    text-align: left;
+    padding: 0.35rem 0.5rem;
+    white-space: nowrap;
+  }
+
+  .pricing-table tbody th {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 72, 'SOFT' 40;
+    font-weight: 500;
+    font-size: 1rem;
+    color: #171410;
+    text-align: left;
+    padding: 0.5rem 0.5rem;
+  }
+
+  .pricing-table tbody td {
+    padding: 0.5rem 0.5rem;
+    color: #3A3328;
+    vertical-align: baseline;
+    white-space: nowrap;
+  }
+
+  .pricing-table tbody tr {
+    border-bottom: 1px solid rgba(23, 20, 16, 0.1);
+  }
+
+  .pricing-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .text-right { text-align: right; }
+
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+  }
+
+  .overage {
+    color: #998E78;
+    font-size: 0.72rem;
+  }
+
+  @media print {
+    .section-label { font-size: 7pt; margin: 0 0 0.05in; }
+    .pricing-table { font-size: 8.5pt; }
+    .pricing-table thead th {
+      font-size: 6.5pt;
+      padding: 0.05in 0.1in;
+    }
+    .pricing-table tbody th {
+      font-size: 10pt;
+      padding: 0.06in 0.1in;
+    }
+    .pricing-table tbody td {
+      padding: 0.06in 0.1in;
+    }
+    .mono { font-size: 8pt; }
+    .overage { font-size: 6.5pt; }
+  }
+</style>

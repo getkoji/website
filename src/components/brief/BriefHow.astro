@@ -1,0 +1,184 @@
+---
+interface Props {
+  sectionLabel?: string;
+  title?: string;
+  prose?: string;
+}
+
+const {
+  sectionLabel = 'How it works',
+  title = 'Describe what you need. Get exactly that.',
+  prose = 'Define a schema. Process a document. Get structured data. Three steps, one YAML file, zero code.',
+} = Astro.props;
+---
+
+<section class="brief-how brief-section">
+  <div class="how-head">
+    <p class="section-label">{sectionLabel}</p>
+    <h2 class="how-title">{title}</h2>
+    <p class="how-prose">{prose}</p>
+  </div>
+
+  <div class="how-split">
+    <div class="pane">
+      <div class="pane-header">
+        <span class="file-name">schemas/invoice.yaml</span>
+        <span class="badge">input</span>
+      </div>
+      <pre class="code"><span class="tok-key">name</span>: invoice
+<span class="tok-key">fields</span>:
+  <span class="tok-key">invoice_number</span>:
+    <span class="tok-key">type</span>: <span class="tok-str">string</span>
+    <span class="tok-key">required</span>: <span class="tok-num">true</span>
+  <span class="tok-key">total_amount</span>:
+    <span class="tok-key">type</span>: <span class="tok-str">number</span>
+  <span class="tok-key">vendor</span>:
+    <span class="tok-key">type</span>: <span class="tok-str">string</span></pre>
+    </div>
+
+    <div class="pane">
+      <div class="pane-header">
+        <span class="file-name">output.json</span>
+        <span class="badge accent">output</span>
+      </div>
+      <pre class="code">&#123;
+  <span class="tok-key">"invoice_number"</span>: <span class="tok-str">"INV-2026-0042"</span>,
+  <span class="tok-key">"total_amount"</span>: <span class="tok-num">4250.00</span>,
+  <span class="tok-key">"vendor"</span>: <span class="tok-str">"Acme Corp"</span>,
+  <span class="tok-key">"_confidence"</span>: &#123;
+    <span class="tok-key">"invoice_number"</span>: <span class="tok-num">0.99</span>,
+    <span class="tok-key">"total_amount"</span>: <span class="tok-num">0.97</span>
+  &#125;
+&#125;</pre>
+    </div>
+  </div>
+</section>
+
+<style>
+  .brief-how {
+    margin-bottom: 1.5rem;
+  }
+
+  .how-head {
+    margin-bottom: 0.8rem;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #665C4B;
+    margin: 0 0 0.4rem;
+  }
+
+  .how-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 50;
+    font-size: 1.35rem;
+    line-height: 1.1;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: #171410;
+    margin: 0 0 0.35rem;
+  }
+
+  .how-prose {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: #3A3328;
+    margin: 0;
+    max-width: 62ch;
+  }
+
+  /* Now that How It Works spans both grid columns, YAML and JSON
+     go side by side again — there's enough room for both. */
+  .how-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem;
+    margin-top: 0.7rem;
+  }
+
+  .pane {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .pane-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.35rem 0.6rem;
+    background: #ECE3D0;
+    border: 1px solid rgba(23, 20, 16, 0.12);
+    border-bottom: none;
+    border-radius: 2px 2px 0 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+  }
+
+  .file-name { color: #3A3328; }
+  .badge {
+    color: #665C4B;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.6rem;
+    padding: 0.08rem 0.35rem;
+    background: #F4EEE2;
+    border: 1px solid rgba(23, 20, 16, 0.12);
+    border-radius: 2px;
+  }
+  .badge.accent {
+    background: #C33520;
+    color: #F4EEE2;
+    border-color: #C33520;
+  }
+
+  .code {
+    background: #171410;
+    color: #ECE3D0;
+    padding: 0.7rem 0.85rem;
+    margin: 0;
+    border-radius: 0 0 2px 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    line-height: 1.55;
+    overflow: auto;
+    white-space: pre;
+  }
+
+  .tok-key { color: #E8C583; }
+  .tok-str { color: #C8D79D; }
+  .tok-num { color: #F2A57B; }
+
+  @media print {
+    .section-label { font-size: 7pt; margin: 0 0 0.05in; }
+    .how-head { margin-bottom: 0.08in; }
+    .how-title {
+      font-size: 12pt;
+      line-height: 1.1;
+      margin: 0 0 0.05in;
+    }
+    .how-prose {
+      font-size: 8.5pt;
+      line-height: 1.35;
+    }
+    .how-split {
+      gap: 0.08in;
+      margin-top: 0.08in;
+    }
+    .code {
+      font-size: 6.8pt;
+      line-height: 1.35;
+      padding: 0.08in 0.12in;
+    }
+    .pane-header {
+      padding: 0.04in 0.1in;
+    }
+    .file-name { font-size: 6.5pt; }
+    .badge { font-size: 5.5pt; padding: 0.01in 0.06in; }
+  }
+
+</style>
