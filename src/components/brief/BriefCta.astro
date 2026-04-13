@@ -1,0 +1,112 @@
+---
+interface CtaItem {
+  label: string;
+  value: string;
+  url?: string;
+}
+
+interface Props {
+  sectionLabel?: string;
+  ctas?: CtaItem[];
+}
+
+const {
+  sectionLabel = 'Get in',
+  ctas = [],
+} = Astro.props;
+---
+
+<section class="brief-cta brief-section">
+  <p class="section-label">{sectionLabel}</p>
+  <ul class="cta-list">
+    {ctas.map((c) => (
+      <li>
+        <span class="cta-label">{c.label}</span>
+        <span class="arrow">→</span>
+        {c.url ? (
+          <a href={c.url} class="cta-value">{c.value}</a>
+        ) : (
+          <span class="cta-value">{c.value}</span>
+        )}
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .brief-cta {
+    padding-top: 0;
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #C33520;
+    margin: 0 0 0.55rem;
+  }
+
+  /* BriefCta spans both grid columns. The three CTAs render as a 3-column
+   * action bar. Each column stacks a small label above a monospaced value. */
+  .cta-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .cta-list li {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding-top: 0.6rem;
+    border-top: 2px solid #C33520;
+  }
+
+  .cta-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #665C4B;
+  }
+
+  .cta-list .arrow {
+    display: none; /* arrow redundant in the stacked layout */
+  }
+
+  .cta-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.92rem;
+    color: #171410;
+    text-decoration: none;
+    word-break: break-all;
+  }
+
+  a.cta-value {
+    border-bottom: 1px solid rgba(195, 53, 32, 0.4);
+  }
+
+  a.cta-value:hover {
+    color: #C33520;
+    border-bottom-color: #C33520;
+  }
+
+  @media print {
+    .brief-cta {
+      padding-top: 0;
+    }
+    .section-label { font-size: 7pt; margin: 0 0 0.1in; }
+    .cta-list { gap: 0.22in; }
+    .cta-list li {
+      padding-top: 0.1in;
+    }
+    .cta-label { font-size: 6.5pt; }
+    .cta-value { font-size: 9pt; }
+  }
+</style>

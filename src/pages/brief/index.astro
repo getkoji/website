@@ -1,0 +1,88 @@
+---
+/**
+ * Default one-pager — targeted at midsized company prospects (discovery calls).
+ *
+ * To spin up a variant (operator partner, enterprise sales recruit, vertical-
+ * specific version), copy this file to src/pages/brief/<name>.astro and swap
+ * the content. The layout + components don't need to change.
+ */
+import BriefLayout from '../../layouts/BriefLayout.astro';
+import BriefHero from '../../components/brief/BriefHero.astro';
+import BriefPillars from '../../components/brief/BriefPillars.astro';
+import BriefHow from '../../components/brief/BriefHow.astro';
+import BriefAudience from '../../components/brief/BriefAudience.astro';
+import BriefPricing from '../../components/brief/BriefPricing.astro';
+import BriefCta from '../../components/brief/BriefCta.astro';
+import BriefFooter from '../../components/brief/BriefFooter.astro';
+
+const pillars = [
+  {
+    title: 'Your data, your infrastructure',
+    body:
+      'Run Koji on your laptop, your VPC, or our managed cloud. Same product, your call. The open source core is Apache 2.0 — inspect it, fork it, air-gap it.',
+  },
+  {
+    title: 'Schemas, not prompts',
+    body:
+      'Describe what you want in YAML. Koji routes fields to the right document sections, extracts with any LLM, and returns structured JSON with per-field confidence. No prompt engineering.',
+  },
+  {
+    title: 'Honest pricing',
+    body:
+      '$49/month Pro with 500 documents included, $0.10 per additional doc. No per-token math, no credit systems, no "platform fees" at the bottom of the invoice.',
+  },
+];
+
+const audiences = [
+  { who: 'Insurance ops', what: 'policies, declarations, endorsements' },
+  { who: 'Legal teams',   what: 'contracts, court filings, lease terms' },
+  { who: 'Finance ops',   what: 'invoices, receipts, vendor documents' },
+];
+
+const tiers = [
+  { name: 'Free',       docs: '100',       pages: '25',        price: '$0',          overage: undefined },
+  { name: 'Pro',        docs: '500',       pages: '100',       price: '$49/mo',      overage: '$0.10/doc' },
+  { name: 'Scale',      docs: '5,000',     pages: '500',       price: '$299/mo',     overage: '$0.08/doc' },
+  { name: 'Enterprise', docs: 'Unlimited', pages: 'Unlimited', price: 'Custom',      overage: undefined },
+];
+
+const ctas = [
+  { label: 'Try the cloud',   value: 'getkoji.dev/waitlist',  url: 'https://getkoji.dev/waitlist' },
+  { label: 'Self-host today', value: 'pip install koji-cli',  url: 'https://github.com/getkoji/koji' },
+  { label: 'Talk to us',      value: 'hello@getkoji.dev',     url: 'mailto:hello@getkoji.dev' },
+];
+---
+
+<BriefLayout
+  title="Koji — One-page brief"
+  description="Self-hosted document processing for teams who can't ship their data to a third-party cloud."
+  variant="prospects"
+>
+  <BriefHero
+    eyebrow="Open source · Cloud or self-hosted"
+    headline="Documents in."
+    accent="Structured data out."
+    lede="Your invoices, contracts, and policies contain your business. Turning them into data shouldn't require sending them to someone else's cloud. Koji is the document processing platform for teams who can't — or won't — hand their documents to a third party."
+  />
+
+  <BriefPillars sectionLabel="What it is" pillars={pillars} />
+
+  {/* Row 3: How it works spans full width with YAML | JSON side-by-side */}
+  <BriefHow
+    sectionLabel="How it works"
+    title="Describe what you need. Get exactly that."
+    prose="Schemas are YAML. Pipelines are YAML. The model sees your field descriptions, not your prose."
+  />
+
+  {/* Row 4: Pricing (left — wider col so the overage rate has room)
+           + Who uses it (right — narrower col, audience is compact) */}
+  <BriefPricing sectionLabel="Pricing" tiers={tiers} />
+
+  <BriefAudience sectionLabel="Who uses it" audiences={audiences} />
+
+  {/* Row 5: Get in spans full width as the closing call-to-action */}
+  <BriefCta sectionLabel="Get in" ctas={ctas} />
+
+  {/* Grid row 5: footer spans full width */}
+  <BriefFooter line="Apache 2.0  ·  github.com/getkoji/koji  ·  getkoji.dev" />
+</BriefLayout>

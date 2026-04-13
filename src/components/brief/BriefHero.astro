@@ -1,0 +1,119 @@
+---
+import BrandMark from '../BrandMark.astro';
+
+interface Props {
+  eyebrow?: string;
+  headline?: string;
+  accent?: string;
+  lede?: string;
+}
+
+const {
+  eyebrow = 'Open source · Cloud or self-hosted',
+  headline = 'Documents in.',
+  accent = 'Structured data out.',
+  lede = '',
+} = Astro.props;
+---
+
+<header class="brief-hero brief-section">
+  <div class="brief-brand">
+    <BrandMark size={34} strokeWidth={5} />
+    <span class="brief-wordmark">koji</span>
+  </div>
+
+  <p class="brief-eyebrow">{eyebrow}</p>
+
+  <h1 class="brief-headline">
+    {headline}<br />
+    <em class="accent">{accent}</em>
+  </h1>
+
+  {lede && <p class="brief-lede">{lede}</p>}
+</header>
+
+<style>
+  .brief-hero {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(23, 20, 16, 0.14);
+  }
+
+  .brief-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .brief-wordmark {
+    font-family: 'Fraunces', serif;
+    font-size: 1.6rem;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    line-height: 1;
+    color: #171410;
+  }
+
+  .brief-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #C33520;
+    margin: 0 0 0.4rem;
+  }
+
+  .brief-headline {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 50;
+    font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    margin: 0 0 0.55rem;
+    color: #171410;
+    text-wrap: balance;
+  }
+
+  .brief-headline .accent {
+    color: #C33520;
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .brief-lede {
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: #3A3328;
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  @media print {
+    .brief-hero {
+      padding-bottom: 0.18in;
+    }
+    .brief-brand {
+      margin-bottom: 0.14in;
+    }
+    .brief-wordmark {
+      font-size: 15pt;
+    }
+    .brief-headline {
+      font-size: 22pt;
+      line-height: 1;
+      margin: 0 0 0.1in;
+    }
+    .brief-lede {
+      font-size: 9.5pt;
+      line-height: 1.35;
+      max-width: 70ch;
+    }
+    .brief-eyebrow {
+      font-size: 7pt;
+      margin: 0 0 0.08in;
+    }
+  }
+</style>

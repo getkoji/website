@@ -1,0 +1,268 @@
+---
+/**
+ * BriefLayout — the shared one-pager shell.
+ *
+ * Every variant under src/pages/brief/*.astro should use this layout.
+ * The layout is tuned to print cleanly to PDF at US Letter (8.5×11) with
+ * 0.5in margins: browser Print → Save as PDF → you get a polished leave-behind.
+ *
+ * On screen it has breathing room; on print it tightens up via @media print.
+ * The "Download PDF" button is screen-only and calls window.print().
+ */
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  variant?: string;
+}
+
+const {
+  title = 'Koji — One-page brief',
+  description = 'The open source document processing platform for teams who can\'t ship their data to a third-party cloud.',
+  variant = 'prospects',
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="noindex" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body data-variant={variant}>
+    <div class="brief-screen-toolbar no-print">
+      <a href="/" class="back-link">
+        <span class="arrow">←</span>
+        <span>getkoji.dev</span>
+      </a>
+      <button type="button" class="print-btn" data-print>
+        <span>Download PDF</span>
+        <span class="arrow">↓</span>
+      </button>
+    </div>
+
+    <main class="brief">
+      <slot />
+    </main>
+
+    <script>
+      document.querySelectorAll<HTMLButtonElement>('[data-print]').forEach((btn) => {
+        btn.addEventListener('click', () => window.print());
+      });
+    </script>
+
+    <style is:global>
+      /* ---------- Print page geometry -----------------------------------
+       * Zero the physical page margins so the cream background bleeds to
+       * the paper edge. Inset the content via .brief padding instead, so
+       * text has breathing room regardless of the user's print-margin
+       * setting. User can pick "default", "none", or "custom" in their
+       * print dialog and the result looks the same.
+       */
+      @page {
+        size: letter;
+        margin: 0;
+      }
+
+      @media print {
+        html, body {
+          background: #F4EEE2 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          font-size: 9pt !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .no-print {
+          display: none !important;
+        }
+        .brief {
+          background: #F4EEE2 !important;
+          /* Asymmetric: tighter bottom padding so content ends comfortably
+           * above the page boundary, preventing a phantom second page. */
+          padding: 0.5in 0.5in 0.35in !important;
+          margin: 0 !important;
+          max-width: none !important;
+          min-height: auto !important;
+          height: auto !important;
+          box-shadow: none !important;
+          font-size: 9pt !important;
+          line-height: 1.4 !important;
+          display: grid !important;
+          grid-template-columns: 1.2fr 1fr !important;
+          column-gap: 0.45in !important;
+          row-gap: 0.24in !important;
+        }
+        .brief > * {
+          margin: 0 !important;
+        }
+        .brief > .brief-footer {
+          margin-top: 0.14in !important;
+        }
+        .brief > .brief-hero,
+        .brief > .brief-pillars,
+        .brief > .brief-how,
+        .brief > .brief-cta,
+        .brief > .brief-footer {
+          grid-column: 1 / -1 !important;
+        }
+        /* Keep blocks from breaking across pages */
+        .brief-section, .brief-pillar, .brief-pricing-row {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+      }
+
+      /* ---------- Screen layout ---------------------------------------- */
+      body {
+        background: #E8DFC9;
+        min-height: 100vh;
+        font-family: 'Instrument Sans', -apple-system, sans-serif;
+      }
+
+      .brief-screen-toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        background: rgba(232, 223, 201, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(23, 20, 16, 0.08);
+      }
+
+      .brief-screen-toolbar .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        color: #3A3328;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .brief-screen-toolbar .back-link:hover {
+        color: #C33520;
+      }
+
+      .brief-screen-toolbar .back-link .arrow {
+        transition: transform 0.3s ease-out;
+      }
+
+      .brief-screen-toolbar .back-link:hover .arrow {
+        transform: translateX(-3px);
+      }
+
+      .print-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.55rem 1rem;
+        background: #171410;
+        color: #F4EEE2;
+        border: none;
+        border-radius: 2px;
+        font-family: 'Instrument Sans', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.3s;
+      }
+
+      .print-btn:hover {
+        background: #C33520;
+      }
+
+      .print-btn .arrow {
+        transition: transform 0.3s ease-out;
+      }
+
+      .print-btn:hover .arrow {
+        transform: translateY(2px);
+      }
+
+      /* The brief is a paper sheet on screen and in print. It uses an
+       * editorial 2-column grid so sections can tile next to each other
+       * instead of stacking. Hero, pillars, and footer span both columns;
+       * everything else fills the grid in source order. */
+      .brief {
+        max-width: 8.5in;
+        margin: 2rem auto 4rem;
+        padding: 0.7in;
+        background: #F4EEE2;
+        box-shadow: 0 24px 80px rgba(23, 20, 16, 0.12);
+        color: #171410;
+        font-size: 10pt;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        column-gap: 0.55in;
+        row-gap: 0.38in;
+        align-content: start;
+        grid-auto-rows: min-content;
+      }
+
+      /* Kill any margin on direct children — grid gap handles spacing. */
+      .brief > * {
+        margin: 0 !important;
+      }
+
+      /* Extra breathing room above the footer — adds to the grid row-gap
+       * so the closing line sits apart from the CTAs. */
+      .brief > .brief-footer {
+        margin-top: 0.75rem !important;
+      }
+
+      /* Reset the global marketing-site `section` rule inside the brief.
+       * The main site's global.css sets `section { padding: clamp(5rem,
+       * 10vw, 9rem) 0 }` which stacks to ~288px of whitespace per section
+       * on wide screens. The brief needs tight editorial spacing, so blow
+       * it away for anything under .brief. */
+      .brief section {
+        padding: 0 !important;
+      }
+
+      /* Full-width sections span both grid columns */
+      .brief > .brief-hero,
+      .brief > .brief-pillars,
+      .brief > .brief-how,
+      .brief > .brief-cta,
+      .brief > .brief-footer {
+        grid-column: 1 / -1;
+      }
+
+      /* Keep the 2-column grid on anything wider than a phone. Below 720px
+       * (typical tablet/phone), collapse to a single column and remove the
+       * paper treatment so it fills the viewport. */
+      @media (max-width: 720px) {
+        .brief {
+          max-width: 100%;
+          margin: 0;
+          box-shadow: none;
+          padding: 1rem 1.25rem;
+          min-height: 100vh;
+          grid-template-columns: 1fr;
+          row-gap: 1rem;
+        }
+        .brief-screen-toolbar {
+          padding: 0.75rem 1.25rem;
+        }
+      }
+    </style>
+  </body>
+</html>

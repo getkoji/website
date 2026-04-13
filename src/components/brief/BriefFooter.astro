@@ -1,0 +1,34 @@
+---
+interface Props {
+  line?: string;
+}
+
+const {
+  line = 'Apache 2.0  ·  github.com/getkoji/koji  ·  getkoji.dev',
+} = Astro.props;
+---
+
+<footer class="brief-footer">
+  <span>{line}</span>
+</footer>
+
+<style>
+  .brief-footer {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    color: #998E78;
+    text-align: center;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(23, 20, 16, 0.1);
+  }
+
+  @media print {
+    .brief-footer {
+      font-size: 6.5pt;
+      padding-top: 0.08in;
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+</style>
