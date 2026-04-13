@@ -1,0 +1,152 @@
+---
+interface Props {
+  totalDocuments: number;
+  overallAccuracy: number;
+  totalFields: number;
+  updated: string;
+}
+
+const { totalDocuments, overallAccuracy, totalFields, updated } = Astro.props;
+
+const formatNumber = (n: number) => n.toLocaleString('en-US');
+const formatPct = (n: number) => (n * 100).toFixed(1) + '%';
+
+const updatedDate = new Date(updated).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<section class="bench-hero">
+  <div class="container">
+    <p class="eyebrow">
+      <span>Validation corpus</span>
+      <span class="dot">·</span>
+      <span>Updated {updatedDate}</span>
+    </p>
+
+    <h1 class="display">
+      How accurate is<br/>
+      <span class="accent">Koji, really?</span>
+    </h1>
+
+    <p class="lede">
+      Every change to the extraction pipeline is validated against a public corpus of real-world documents. Schemas, expected outputs, and benchmark runs all live in <a href="https://github.com/getkoji/corpus">getkoji/corpus</a>. No cherry-picked numbers, no hidden regressions — what you see below is what nightly CI reports.
+    </p>
+
+    <div class="headline-stats">
+      <div class="stat">
+        <span class="stat-value">{formatNumber(totalDocuments)}</span>
+        <span class="stat-label">documents</span>
+      </div>
+      <div class="sep" aria-hidden="true"></div>
+      <div class="stat">
+        <span class="stat-value">{formatPct(overallAccuracy)}</span>
+        <span class="stat-label">field accuracy</span>
+      </div>
+      <div class="sep" aria-hidden="true"></div>
+      <div class="stat">
+        <span class="stat-value">{formatNumber(totalFields)}</span>
+        <span class="stat-label">fields checked</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bench-hero {
+    padding: 9rem 0 5rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .eyebrow .dot {
+    color: var(--cream-4);
+  }
+
+  h1.display {
+    font-size: clamp(2.75rem, 7.5vw, 6rem);
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  .display .accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .lede {
+    max-width: 62ch;
+    font-size: 1.15rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+    margin-bottom: 3rem;
+  }
+
+  .lede a {
+    color: var(--vermillion);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  .headline-stats {
+    display: flex;
+    align-items: baseline;
+    gap: 2.5rem;
+    padding: 2rem 0 0;
+    border-top: 1px solid var(--border);
+    max-width: 820px;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'SOFT' 50;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .stat:nth-child(3) .stat-value {
+    color: var(--vermillion);
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .sep {
+    width: 1px;
+    align-self: stretch;
+    background: var(--border);
+    margin: 0.25rem 0;
+  }
+
+  @media (max-width: 720px) {
+    .headline-stats {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1.75rem;
+    }
+    .sep {
+      display: none;
+    }
+  }
+</style>

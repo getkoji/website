@@ -1,0 +1,216 @@
+---
+interface Model {
+  id: string;
+  name: string;
+  provider: string;
+  avg_accuracy: number;
+  avg_latency_s: number;
+  avg_cost_usd_per_doc: number;
+}
+
+interface Props {
+  models: Model[];
+}
+
+const { models } = Astro.props;
+
+const formatPct = (n: number) => (n * 100).toFixed(1) + '%';
+const formatLatency = (n: number) => n.toFixed(1) + 's';
+const formatCost = (n: number) => {
+  if (n === 0) return 'Free';
+  return '$' + n.toFixed(4);
+};
+---
+
+<section class="bench-models">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">02</span>
+        <span>By model</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="models-head">
+      <h2 class="display">
+        Your model,<br/>
+        <em class="accent">your trade-off.</em>
+      </h2>
+      <p class="lede">
+        Koji runs on any OpenAI-compatible endpoint or local model via Ollama. Different models hit different points on the accuracy/latency/cost curve — swap in a config change, not a code change.
+      </p>
+    </div>
+
+    <div class="models-table-wrap">
+      <table class="models-table">
+        <thead>
+          <tr>
+            <th scope="col">Model</th>
+            <th scope="col" class="text-right">Accuracy</th>
+            <th scope="col" class="text-right">Latency</th>
+            <th scope="col" class="text-right">Cost per doc</th>
+          </tr>
+        </thead>
+        <tbody>
+          {models.map((m) => (
+            <tr>
+              <th scope="row">
+                <span class="model-name">{m.name}</span>
+                <span class="model-provider">{m.provider}</span>
+              </th>
+              <td class="text-right mono accent">{formatPct(m.avg_accuracy)}</td>
+              <td class="text-right mono">{formatLatency(m.avg_latency_s)}</td>
+              <td class="text-right mono">{formatCost(m.avg_cost_usd_per_doc)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+
+    <p class="footnote">
+      All runs use the same pipeline configuration: parse via Docling, intelligent extraction (map → route → extract → validate → reconcile), full corpus. Latency and cost are averages across categories. See <a href="https://github.com/getkoji/corpus">getkoji/corpus</a> for the raw benchmark JSON.
+    </p>
+  </div>
+</section>
+
+<style>
+  .bench-models {
+    padding: var(--section-pad) 0;
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .models-head {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 3.5rem;
+  }
+
+  .models-head h2 {
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .models-head .accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .models-head .lede {
+    max-width: 46ch;
+    padding-bottom: 0.5rem;
+  }
+
+  .models-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    background: var(--cream);
+    box-shadow: var(--shadow-md);
+  }
+
+  .models-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+
+  .models-table thead th {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    text-align: left;
+    padding: 1.25rem 1.5rem 1rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .models-table tbody th {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    align-items: flex-start;
+  }
+
+  .model-name {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 72, 'SOFT' 40;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .model-provider {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-3);
+    letter-spacing: 0.04em;
+  }
+
+  .models-table tbody td {
+    padding: 1.25rem 1.5rem;
+    vertical-align: middle;
+    font-size: 1.1rem;
+    color: var(--ink-2);
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .models-table tbody tr {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .models-table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .text-right { text-align: right; }
+
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+  }
+
+  .accent {
+    color: var(--vermillion);
+    font-weight: 500;
+  }
+
+  .footnote {
+    margin-top: 1.5rem;
+    font-size: 0.88rem;
+    color: var(--ink-3);
+    line-height: 1.55;
+    max-width: 72ch;
+  }
+
+  .footnote a {
+    color: var(--vermillion);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 3px;
+  }
+
+  @media (max-width: 1000px) {
+    .models-head {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+  }
+</style>

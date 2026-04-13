@@ -1,0 +1,223 @@
+---
+interface Category {
+  name: string;
+  slug: string;
+  documents: number;
+  fields_checked: number;
+  accuracy_by_model: Record<string, number>;
+}
+
+interface Props {
+  categories: Category[];
+  primaryModel: string;
+}
+
+const { categories, primaryModel } = Astro.props;
+
+const formatPct = (n: number) => (n * 100).toFixed(1) + '%';
+const formatNum = (n: number) => n.toLocaleString('en-US');
+---
+
+<section class="bench-categories">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">01</span>
+        <span>By category</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="categories-head">
+      <h2 class="display">
+        Every document type,<br/>
+        <em class="accent">measured in public.</em>
+      </h2>
+      <p class="lede">
+        The corpus is organized by domain — invoices, insurance policies, SEC filings, contracts, government forms, receipts. Each category has its own schema and expected-output fixtures. Accuracy below is Koji's intelligent pipeline running <code>{primaryModel}</code> end-to-end.
+      </p>
+    </div>
+
+    <div class="cat-grid">
+      {categories.map((cat) => {
+        const acc = cat.accuracy_by_model[primaryModel] ?? 0;
+        return (
+          <article class="cat-card">
+            <header class="cat-head">
+              <h3 class="cat-name">{cat.name}</h3>
+              <span class="cat-slug">{cat.slug}</span>
+            </header>
+            <div class="cat-stats">
+              <div class="cat-stat accuracy">
+                <span class="cat-stat-value">{formatPct(acc)}</span>
+                <span class="cat-stat-label">accuracy</span>
+              </div>
+              <div class="cat-stat">
+                <span class="cat-stat-value">{formatNum(cat.documents)}</span>
+                <span class="cat-stat-label">documents</span>
+              </div>
+              <div class="cat-stat">
+                <span class="cat-stat-value">{formatNum(cat.fields_checked)}</span>
+                <span class="cat-stat-label">fields checked</span>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .bench-categories {
+    padding: var(--section-pad) 0;
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .categories-head {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 4rem;
+    align-items: end;
+    margin-bottom: 4rem;
+  }
+
+  .categories-head h2 {
+    font-size: clamp(2rem, 5vw, 3.75rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  .categories-head .accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .categories-head .lede {
+    max-width: 44ch;
+    padding-bottom: 0.5rem;
+  }
+
+  .categories-head code {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--cream-2);
+    padding: 0.1em 0.35em;
+    border-radius: 2px;
+    color: var(--ink);
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .cat-card {
+    padding: 1.75rem 1.75rem 1.5rem;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-top: 2px solid var(--vermillion);
+    border-radius: 0 0 3px 3px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    transition: transform 0.4s var(--ease-out), box-shadow 0.4s;
+  }
+
+  .cat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+
+  .cat-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .cat-name {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 72, 'SOFT' 40;
+    font-size: 1.25rem;
+    line-height: 1.15;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    margin: 0;
+  }
+
+  .cat-slug {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--ink-4);
+  }
+
+  .cat-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cat-stat {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .cat-stat-value {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 72, 'SOFT' 40;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .cat-stat.accuracy .cat-stat-value {
+    color: var(--vermillion);
+    font-size: 2rem;
+  }
+
+  .cat-stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  @media (max-width: 1000px) {
+    .categories-head {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
+    .cat-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .cat-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

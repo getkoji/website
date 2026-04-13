@@ -1,0 +1,183 @@
+---
+/**
+ * Home page section that surfaces the current benchmark numbers.
+ * Reads from the same src/data/benchmarks.json that /benchmarks uses,
+ * so the headline stats here stay in sync with the full dashboard.
+ */
+import data from '../data/benchmarks.json';
+
+const formatNumber = (n: number) => n.toLocaleString('en-US');
+const formatPct = (n: number) => (n * 100).toFixed(1) + '%';
+---
+
+<section class="validated" id="benchmarks-preview">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">06</span>
+        <span>Validated</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="validated-grid">
+      <div class="validated-head">
+        <h2 class="display">
+          Numbers on the<br/>
+          <em class="italic-accent">public record.</em>
+        </h2>
+        <p class="lede">
+          Every change to the extraction pipeline runs against a public corpus of real-world documents — invoices, insurance policies, SEC filings, contracts, forms, receipts. Accuracy is measured, versioned, and published. Regressions get flagged in PRs before they merge.
+        </p>
+        <a href="/benchmarks" class="see-all">
+          See full benchmarks
+          <span class="arrow">→</span>
+        </a>
+      </div>
+
+      <div class="stats-block">
+        <div class="stat">
+          <span class="stat-value">{formatNumber(data.total_documents)}</span>
+          <span class="stat-label">documents in the corpus</span>
+        </div>
+        <hr class="stat-rule" />
+        <div class="stat accent">
+          <span class="stat-value">{formatPct(data.overall_accuracy)}</span>
+          <span class="stat-label">overall field accuracy</span>
+        </div>
+        <hr class="stat-rule" />
+        <div class="stat">
+          <span class="stat-value">{formatNumber(data.total_fields_checked)}</span>
+          <span class="stat-label">fields checked nightly</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .validated {
+    padding: var(--section-pad) 0;
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .validated-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 4.5rem;
+    align-items: start;
+  }
+
+  .validated-head h2 {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.5rem;
+    text-wrap: balance;
+  }
+
+  .italic-accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .validated-head .lede {
+    max-width: 52ch;
+    margin-bottom: 2rem;
+  }
+
+  .see-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.85rem 1.35rem;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 2px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: background 0.3s, transform 0.4s var(--ease-out);
+  }
+
+  .see-all:hover {
+    background: var(--vermillion);
+    transform: translateY(-1px);
+  }
+
+  .see-all .arrow {
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .see-all:hover .arrow {
+    transform: translateX(3px);
+  }
+
+  /* Stats block — visual anchor on the right column */
+  .stats-block {
+    display: flex;
+    flex-direction: column;
+    padding: 2.5rem 2rem;
+    background: var(--cream-2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.1rem 0;
+  }
+
+  .stat:first-of-type { padding-top: 0; }
+  .stat:last-of-type  { padding-bottom: 0; }
+
+  .stat-value {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'SOFT' 50;
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    line-height: 1;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: -0.025em;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .stat.accent .stat-value {
+    color: var(--vermillion);
+    font-size: clamp(2.5rem, 4.5vw, 3.75rem);
+  }
+
+  .stat-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .stat-rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .validated-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,230 @@
+---
+interface HistoryPoint {
+  date: string;
+  overall: number;
+  total_documents: number;
+}
+
+interface Props {
+  history: HistoryPoint[];
+}
+
+const { history } = Astro.props;
+
+// Normalize the data to SVG viewBox coords (0-1000 wide, 0-400 tall)
+const vbWidth = 1000;
+const vbHeight = 400;
+const padding = { top: 60, right: 40, bottom: 60, left: 60 };
+
+const minAcc = Math.min(...history.map(h => h.overall));
+const maxAcc = Math.max(...history.map(h => h.overall));
+const accRange = maxAcc - minAcc || 0.1;
+
+// Pad the range so the line doesn't hug the top/bottom
+const yMin = Math.max(0, minAcc - accRange * 0.3);
+const yMax = Math.min(1, maxAcc + accRange * 0.15);
+
+const points = history.map((point, i) => {
+  const x = padding.left + (i / (history.length - 1)) * (vbWidth - padding.left - padding.right);
+  const y = padding.top + (1 - (point.overall - yMin) / (yMax - yMin)) * (vbHeight - padding.top - padding.bottom);
+  return { x, y, ...point };
+});
+
+const pathD = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
+
+// Area fill path — trace down to the baseline and back
+const areaD = `${pathD} L${points[points.length - 1].x.toFixed(1)},${vbHeight - padding.bottom} L${points[0].x.toFixed(1)},${vbHeight - padding.bottom} Z`;
+
+const formatDate = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
+const formatPct = (n: number) => (n * 100).toFixed(1) + '%';
+
+const first = points[0];
+const last = points[points.length - 1];
+const delta = last.overall - first.overall;
+const deltaDocs = last.total_documents - first.total_documents;
+---
+
+<section class="bench-trend">
+  <div class="container">
+    <div class="label-row">
+      <p class="section-label">
+        <span class="num">03</span>
+        <span>Accuracy over time</span>
+      </p>
+      <hr class="rule flex-1" />
+    </div>
+
+    <div class="trend-grid">
+      <div class="trend-head">
+        <h2 class="display">
+          Getting better<br/>
+          <em class="accent">with every release.</em>
+        </h2>
+        <p class="lede">
+          Each data point is a nightly CI run against the full corpus. Regressions get flagged in pull requests and fixed before they merge.
+        </p>
+        <div class="trend-deltas">
+          <div class="delta">
+            <span class="delta-value">+{(delta * 100).toFixed(1)}<span class="unit">pt</span></span>
+            <span class="delta-label">accuracy since {formatDate(first.date)}</span>
+          </div>
+          <div class="delta">
+            <span class="delta-value">+{deltaDocs}</span>
+            <span class="delta-label">documents added</span>
+          </div>
+        </div>
+      </div>
+
+      <figure class="trend-chart">
+        <svg viewBox={`0 0 ${vbWidth} ${vbHeight}`} role="img" aria-label="Overall accuracy over time">
+          <defs>
+            <linearGradient id="trend-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#C33520" stop-opacity="0.18"/>
+              <stop offset="100%" stop-color="#C33520" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+
+          {/* Horizontal gridlines — 4 lines across the chart area */}
+          {[0, 0.25, 0.5, 0.75, 1].map((t) => {
+            const y = padding.top + t * (vbHeight - padding.top - padding.bottom);
+            return <line x1={padding.left} y1={y} x2={vbWidth - padding.right} y2={y} stroke="rgba(23,20,16,0.08)" stroke-width="1" stroke-dasharray="2 4" />;
+          })}
+
+          {/* Filled area under the curve */}
+          <path d={areaD} fill="url(#trend-fill)" />
+
+          {/* Trend line */}
+          <path d={pathD} fill="none" stroke="#C33520" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+
+          {/* Data point markers */}
+          {points.map((p, i) => (
+            <g>
+              <circle cx={p.x} cy={p.y} r="7" fill="#F4EEE2" stroke="#C33520" stroke-width="3" />
+              {i === points.length - 1 && (
+                <text x={p.x + 18} y={p.y - 12} font-family="Instrument Sans, sans-serif" font-size="28" font-weight="600" fill="#171410">
+                  {formatPct(p.overall)}
+                </text>
+              )}
+            </g>
+          ))}
+
+          {/* X-axis date labels */}
+          {points.map((p) => (
+            <text x={p.x} y={vbHeight - padding.bottom + 28} font-family="JetBrains Mono, monospace" font-size="20" fill="#665C4B" text-anchor="middle">
+              {formatDate(p.date)}
+            </text>
+          ))}
+        </svg>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bench-trend {
+    padding: var(--section-pad) 0;
+    background: var(--cream-2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .label-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .flex-1 { flex: 1; }
+
+  .trend-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 3.5rem;
+    align-items: center;
+  }
+
+  .trend-head h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+    text-wrap: balance;
+  }
+
+  .trend-head .accent {
+    color: var(--vermillion);
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .trend-head .lede {
+    max-width: 46ch;
+    margin-bottom: 2rem;
+  }
+
+  .trend-deltas {
+    display: flex;
+    gap: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .delta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .delta-value {
+    font-family: var(--font-display);
+    font-variation-settings: 'opsz' 144, 'SOFT' 50;
+    font-size: 2.5rem;
+    line-height: 1;
+    font-weight: 500;
+    color: var(--vermillion);
+    letter-spacing: -0.02em;
+    font-feature-settings: 'tnum' 1;
+  }
+
+  .delta-value .unit {
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    margin-left: 0.15em;
+    color: var(--ink-3);
+  }
+
+  .delta-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .trend-chart {
+    margin: 0;
+    padding: 2rem;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .trend-chart svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  @media (max-width: 900px) {
+    .trend-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+    .trend-deltas {
+      gap: 2rem;
+    }
+  }
+</style>
