@@ -99,7 +99,14 @@ const tiers = [
         <em class="italic-accent">No surprises.</em>
       </h2>
       <p class="lede">
-        Pay a flat monthly fee for an allowance of documents. When you need more, overage is tiered by volume. No per-token math, no credit systems, no "platform fees" at the bottom of the invoice.
+        Pay a flat monthly fee for an allowance of documents. When you need more, overage is a flat per-doc rate. No per-token math, no credit systems, no "platform fees" at the bottom of the invoice.
+      </p>
+    </div>
+
+    <div class="byo-callout">
+      <p>
+        <span class="byo-badge">BYO endpoint</span>
+        All tiers run on <strong>your own AI endpoint</strong> — OpenAI, Azure OpenAI, Bedrock, Anthropic, Ollama, or any custom model. You pay your model vendor directly; <strong>we never touch the inference bill</strong>. No markup on tokens we didn't generate.
       </p>
     </div>
 
@@ -203,6 +210,47 @@ const tiers = [
   .pricing-head .lede {
     padding-bottom: 0.75rem;
     max-width: 46ch;
+  }
+
+  /* BYO callout ======================================================== */
+
+  .byo-callout {
+    margin-bottom: 3rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--cream-2);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--vermillion);
+    border-radius: 3px;
+  }
+
+  .byo-callout p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 80ch;
+  }
+
+  .byo-callout strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .byo-badge {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--vermillion);
+    padding: 2px 8px;
+    background: var(--cream);
+    border: 1px solid var(--vermillion-3);
+    border-radius: 2px;
+    margin-right: 0.6rem;
+    vertical-align: 2px;
+    white-space: nowrap;
   }
 
   /* Tier cards =========================================================== */
