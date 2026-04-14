@@ -1,0 +1,239 @@
+---
+/**
+ * SecurityLayout — the one-pager shell for /security.
+ *
+ * Same print geometry as BriefLayout (US Letter, 0.5in insets, clean
+ * print-to-PDF via browser Print dialog), but its own class namespace
+ * and NO noindex directive — we want enterprise security teams to find
+ * this page via search when they're evaluating Koji.
+ *
+ * On screen: paper sheet with a sticky top toolbar (back link + Download PDF).
+ * On print: full bleed, tight grid, one page.
+ */
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Koji — Security & Compliance Brief',
+  description = 'Self-hosted document processing for regulated industries. Your infrastructure, your models, your audit trail.',
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="canonical" href="https://getkoji.dev/security" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content="https://getkoji.dev/security" />
+    <meta property="og:image" content="https://getkoji.dev/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://getkoji.dev/og.png" />
+
+    <title>{title}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      />
+    </noscript>
+  </head>
+  <body>
+    <div class="sec-screen-toolbar no-print">
+      <a href="/" class="back-link">
+        <span class="arrow">←</span>
+        <span>getkoji.dev</span>
+      </a>
+      <button type="button" class="print-btn" data-print>
+        <span>Download PDF</span>
+        <span class="arrow">↓</span>
+      </button>
+    </div>
+
+    <main class="security">
+      <slot />
+    </main>
+
+    <script>
+      document.querySelectorAll<HTMLButtonElement>('[data-print]').forEach((btn) => {
+        btn.addEventListener('click', () => window.print());
+      });
+    </script>
+
+    <style is:global>
+      /* ---------- Print page geometry -----------------------------------
+       * Zero the physical page margins so the cream background bleeds to
+       * the paper edge. Inset content via .security padding instead, so
+       * the result looks the same regardless of the user's print-margin
+       * setting.
+       */
+      @page {
+        size: letter;
+        margin: 0;
+      }
+
+      @media print {
+        html, body {
+          background: #F4EEE2 !important;
+          margin: 0 !important;
+          padding: 0 !important;
+          font-size: 9pt !important;
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+        }
+        .no-print {
+          display: none !important;
+        }
+        .security {
+          background: #F4EEE2 !important;
+          padding: 0.6in 0.6in 0.45in !important;
+          margin: 0 !important;
+          max-width: none !important;
+          min-height: auto !important;
+          height: auto !important;
+          box-shadow: none !important;
+          font-size: 9pt !important;
+          line-height: 1.55 !important;
+          display: grid !important;
+          grid-template-columns: 1.05fr 1fr !important;
+          column-gap: 0.45in !important;
+          row-gap: 0.42in !important;
+        }
+        .security > * {
+          margin: 0 !important;
+        }
+        /* Full-width sections span both grid columns */
+        .security > .sec-hero,
+        .security > .sec-pillars,
+        .security > .sec-paperwork,
+        .security > .sec-footer {
+          grid-column: 1 / -1 !important;
+        }
+        .sec-section, .sec-pillar, .sec-row {
+          break-inside: avoid;
+          page-break-inside: avoid;
+        }
+      }
+
+      /* ---------- Screen layout ---------------------------------------- */
+      body {
+        background: #E8DFC9;
+        min-height: 100vh;
+        font-family: 'Instrument Sans', -apple-system, sans-serif;
+      }
+
+      .sec-screen-toolbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 2rem;
+        background: rgba(232, 223, 201, 0.85);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(23, 20, 16, 0.08);
+      }
+
+      .sec-screen-toolbar .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.78rem;
+        color: #3A3328;
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .sec-screen-toolbar .back-link:hover {
+        color: #992718;
+      }
+
+      .sec-screen-toolbar .back-link .arrow {
+        transition: transform 0.3s ease-out;
+      }
+
+      .sec-screen-toolbar .back-link:hover .arrow {
+        transform: translateX(-3px);
+      }
+
+      /* Paper sheet — same visual as /brief */
+      .security {
+        max-width: 8.5in;
+        margin: 2rem auto 4rem;
+        padding: 0.65in;
+        background: #F4EEE2;
+        box-shadow: 0 24px 80px rgba(23, 20, 16, 0.12);
+        color: #171410;
+        font-size: 10pt;
+        line-height: 1.5;
+        display: grid;
+        grid-template-columns: 1.05fr 1fr;
+        column-gap: 0.5in;
+        row-gap: 0.32in;
+        align-content: start;
+        grid-auto-rows: min-content;
+      }
+
+      .security > * {
+        margin: 0 !important;
+      }
+
+      /* Reset the main site global `section` padding rule */
+      .security section {
+        padding: 0 !important;
+      }
+
+      /* Full-width sections span both grid columns */
+      .security > .sec-hero,
+      .security > .sec-pillars,
+      .security > .sec-paperwork,
+      .security > .sec-footer {
+        grid-column: 1 / -1;
+      }
+
+      @media (max-width: 720px) {
+        .security {
+          max-width: 100%;
+          margin: 0;
+          box-shadow: none;
+          padding: 1rem 1.25rem;
+          min-height: 100vh;
+          grid-template-columns: 1fr;
+          row-gap: 1rem;
+        }
+        .sec-screen-toolbar {
+          padding: 0.75rem 1.25rem;
+        }
+      }
+    </style>
+  </body>
+</html>
