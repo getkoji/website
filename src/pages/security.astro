@@ -1,0 +1,508 @@
+---
+import SecurityLayout from '../layouts/SecurityLayout.astro';
+
+const version = 'v1.0';
+const updated = '2026-04-13';
+
+const pillars = [
+  {
+    num: '01',
+    title: 'Your infrastructure',
+    body:
+      'Deploy on your laptop, your VPC, your Kubernetes cluster, or a fully air-gapped network. Koji is the same product in all four environments — no reduced feature set for self-host, no required phone-home.',
+  },
+  {
+    num: '02',
+    title: 'Your models',
+    body:
+      'Model-agnostic by design. Configure Koji to use your Azure OpenAI tenant deployment, your Bedrock endpoint, an on-prem Llama cluster, or a mix per pipeline stage. Your AI governance board picks; Koji obeys.',
+  },
+  {
+    num: '03',
+    title: 'Your source',
+    body:
+      'Apache 2.0 licensed. Your security team audits every line. Fork it, modify it, air-gap it. If we disappear, your deployment keeps running — the code is already yours.',
+  },
+  {
+    num: '04',
+    title: 'Your data',
+    body:
+      'Koji OSS makes zero network calls you did not configure. No analytics, no crash reporting, no version-check phone-home. The only external traffic is to the model endpoints your schema declares.',
+  },
+];
+
+const available = [
+  'Self-hosted deployment — laptop, VPC, Kubernetes, air-gapped',
+  'Apache 2.0 open source core — full source auditable',
+  'Model-agnostic — Azure OpenAI tenant, Bedrock, Ollama, on-prem inference',
+  'Per-field confidence scores on every extraction',
+  'Local users + OIDC authentication',
+  'Zero phone-home — no telemetry, no version check, no analytics',
+];
+
+const roadmap = [
+  'Append-only audit log — SIEM-exportable (CEF / JSON)',
+  'SAML 2.0 + SCIM provisioning for enterprise SSO',
+  'Spatial provenance — page and bounding-box per extracted field',
+  'Human-in-the-loop review queue for low-confidence fields',
+  'Customer-managed encryption keys (BYOK)',
+  'SOC 2 Type 1 → Type 2 — timeline on request',
+];
+
+const paperwork = [
+  { label: 'DPA', note: 'Data Processing Agreement — GDPR-aligned template' },
+  { label: 'MSA', note: 'Master Service Agreement for hosted platform engagements' },
+  { label: 'SIG Lite', note: 'Pre-answered vendor security questionnaire, versioned' },
+  { label: 'Addendum', note: 'Custom security addendum for pilot-phase engagements' },
+];
+---
+
+<SecurityLayout
+  title="Koji — Security & Compliance Brief"
+  description="Self-hosted document processing for regulated industries. Your infrastructure, your models, your audit trail. Apache 2.0."
+>
+  <!-- HERO — full width -->
+  <section class="sec-hero">
+    <div class="hero-meta">
+      <span class="version">SECURITY &amp; COMPLIANCE BRIEF</span>
+      <span class="dot">·</span>
+      <span class="version">{version}</span>
+      <span class="dot">·</span>
+      <span class="version">{updated}</span>
+    </div>
+    <h1 class="hero-headline">
+      Your documents. Your infrastructure.<br/>
+      <em class="accent">Your rules.</em>
+    </h1>
+    <p class="hero-lede">
+      Koji is the open source document processing platform built for teams who
+      cannot — or will not — ship their data to a third-party cloud. Schema-driven
+      extraction, model-agnostic, audit-first, deployed on your infrastructure.
+      This brief covers what is available today, what is on the near-term roadmap,
+      and what we can provide for a pilot engagement.
+    </p>
+  </section>
+
+  <!-- PILLARS — full width, 4-column grid -->
+  <section class="sec-pillars">
+    <div class="pillars-grid">
+      {pillars.map((p) => (
+        <article class="sec-pillar">
+          <span class="pillar-num">{p.num}</span>
+          <h2 class="pillar-title">{p.title}</h2>
+          <p class="pillar-body">{p.body}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <!-- AVAILABLE TODAY — column 1 -->
+  <section class="sec-section sec-today">
+    <p class="section-label">Available today</p>
+    <ul class="sec-list today">
+      {available.map((item) => (
+        <li>
+          <span class="bullet check" aria-hidden="true">✓</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <!-- ROADMAP — column 2 -->
+  <section class="sec-section sec-roadmap">
+    <p class="section-label">On the roadmap</p>
+    <ul class="sec-list roadmap">
+      {roadmap.map((item) => (
+        <li>
+          <span class="bullet arrow" aria-hidden="true">→</span>
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+    <p class="roadmap-note">
+      Pilot engagements run under a custom security addendum covering any
+      roadmap gap material to the scope. Production contracts gate on the
+      relevant items landing — we are honest about where we are.
+    </p>
+  </section>
+
+  <!-- PAPERWORK & CONTACT — full width -->
+  <section class="sec-paperwork">
+    <div class="paperwork-grid">
+      <div class="paperwork-col">
+        <p class="section-label">Available on request</p>
+        <ul class="paperwork-list">
+          {paperwork.map((p) => (
+            <li>
+              <span class="pw-label">{p.label}</span>
+              <span class="pw-note">{p.note}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="contact-col">
+        <p class="section-label">Talk to us</p>
+        <ul class="contact-list">
+          <li>
+            <span class="contact-label">Security</span>
+            <a href="mailto:security@getkoji.dev">security@getkoji.dev</a>
+          </li>
+          <li>
+            <span class="contact-label">Sales</span>
+            <a href="mailto:sales@getkoji.dev">sales@getkoji.dev</a>
+          </li>
+          <li>
+            <span class="contact-label">General</span>
+            <a href="mailto:hello@getkoji.dev">hello@getkoji.dev</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER — full width -->
+  <section class="sec-footer">
+    <p class="footer-line">
+      Apache 2.0  ·  github.com/getkoji/koji  ·  docs.getkoji.dev  ·  getkoji.dev  ·  {version} · {updated}
+    </p>
+  </section>
+</SecurityLayout>
+
+<style>
+  /* =====================================================================
+   * SECURITY ONE-PAGER — SCREEN + PRINT STYLES
+   * All colors hard-coded (not CSS vars) so print-color-adjust renders
+   * predictably across browsers and user print-color-preservation settings.
+   * ===================================================================== */
+
+  /* ---------- HERO -------------------------------------------------- */
+  .sec-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #665C4B;
+  }
+
+  .hero-meta .dot {
+    color: #998E78;
+  }
+
+  .hero-headline {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 144, 'SOFT' 50;
+    font-size: clamp(2.4rem, 5vw, 3.4rem);
+    font-weight: 500;
+    line-height: 1.0;
+    letter-spacing: -0.028em;
+    color: #171410;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .hero-headline .accent {
+    color: #992718;
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .hero-lede {
+    max-width: 62ch;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #3A3328;
+    margin: 0;
+  }
+
+  /* ---------- PILLARS (4-column grid) ------------------------------ */
+  .sec-pillars .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.85rem;
+  }
+
+  .sec-pillar {
+    padding-top: 0.55rem;
+    border-top: 2px solid #992718;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .pillar-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    color: #992718;
+  }
+
+  .pillar-title {
+    font-family: 'Fraunces', serif;
+    font-variation-settings: 'opsz' 96, 'SOFT' 50;
+    font-size: 1rem;
+    line-height: 1.2;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #171410;
+    margin: 0;
+  }
+
+  .pillar-body {
+    font-size: 0.78rem;
+    line-height: 1.45;
+    color: #3A3328;
+    margin: 0;
+  }
+
+  /* ---------- SECTION LABELS (shared) ------------------------------ */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #665C4B;
+    margin: 0 0 0.55rem;
+  }
+
+  /* ---------- LISTS (today + roadmap) ------------------------------ */
+  .sec-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .sec-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    line-height: 1.4;
+    color: #171410;
+  }
+
+  .sec-list .bullet {
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.4;
+    width: 0.8rem;
+  }
+
+  .sec-list .bullet.check {
+    color: #992718;
+  }
+
+  .sec-list .bullet.arrow {
+    color: #998E78;
+  }
+
+  .roadmap-note {
+    margin: 0.55rem 0 0;
+    padding-top: 0.45rem;
+    border-top: 1px solid rgba(23, 20, 16, 0.12);
+    font-size: 0.72rem;
+    font-style: italic;
+    line-height: 1.45;
+    color: #665C4B;
+  }
+
+  /* ---------- PAPERWORK + CONTACT ---------------------------------- */
+  .sec-paperwork {
+    border-top: 1px solid rgba(23, 20, 16, 0.12);
+    padding-top: 0.6rem;
+  }
+
+  .paperwork-grid {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1.5rem;
+  }
+
+  .paperwork-col {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 4.8in;
+  }
+
+  .contact-col {
+    flex: 0 0 auto;
+  }
+
+  .paperwork-list,
+  .contact-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .paperwork-list li {
+    display: grid;
+    grid-template-columns: 5.2rem 1fr;
+    column-gap: 0.75rem;
+    align-items: baseline;
+    font-size: 0.78rem;
+    line-height: 1.4;
+  }
+
+  .pw-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: #992718;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .pw-note {
+    color: #3A3328;
+  }
+
+  .contact-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+  }
+
+  .contact-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    font-weight: 500;
+    color: #665C4B;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    min-width: 3.8rem;
+  }
+
+  .contact-list a {
+    color: #171410;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(153, 39, 24, 0.4);
+    transition: color 0.2s, border-bottom-color 0.2s;
+  }
+
+  .contact-list a:hover {
+    color: #992718;
+    border-bottom-color: #992718;
+  }
+
+  /* ---------- FOOTER ----------------------------------------------- */
+  .sec-footer {
+    border-top: 1px solid rgba(23, 20, 16, 0.12);
+    padding-top: 0.55rem;
+    text-align: center;
+  }
+
+  .footer-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: #665C4B;
+    margin: 0;
+  }
+
+  /* ---------- PRINT tighten ---------------------------------------- */
+  @media print {
+    .sec-hero {
+      gap: 0.14in !important;
+    }
+    .hero-headline {
+      font-size: 28pt !important;
+      line-height: 1.0 !important;
+      letter-spacing: -0.03em !important;
+    }
+    .hero-lede {
+      font-size: 9pt !important;
+      line-height: 1.45 !important;
+    }
+    .sec-pillars .pillars-grid {
+      gap: 0.18in !important;
+    }
+    .pillar-title {
+      font-size: 10.5pt !important;
+    }
+    .pillar-body {
+      font-size: 8pt !important;
+      line-height: 1.4 !important;
+    }
+    .sec-list li {
+      font-size: 8.5pt !important;
+      line-height: 1.38 !important;
+    }
+    .sec-list {
+      gap: 0.1in !important;
+    }
+    .roadmap-note {
+      font-size: 7.5pt !important;
+      margin-top: 0.12in !important;
+    }
+    .paperwork-list li,
+    .contact-list li {
+      font-size: 8pt !important;
+      line-height: 1.38 !important;
+    }
+    .footer-line {
+      font-size: 6.5pt !important;
+    }
+    .section-label {
+      font-size: 6.5pt !important;
+      margin-bottom: 0.08in !important;
+    }
+    .sec-paperwork {
+      padding-top: 0.1in !important;
+    }
+    .sec-footer {
+      padding-top: 0.1in !important;
+    }
+    /* Print: don't space-between — let the two columns sit naturally
+     * next to each other with a fixed gap, or the contact column ends
+     * up jammed against the right page margin with a canyon of whitespace
+     * between it and the paperwork list. */
+    .paperwork-grid {
+      justify-content: flex-start !important;
+      gap: 0.55in !important;
+    }
+  }
+
+  /* ---------- SCREEN responsive ------------------------------------ */
+  @media (max-width: 760px) {
+    .sec-pillars .pillars-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .paperwork-grid {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .paperwork-col {
+      max-width: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .sec-pillars .pillars-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
