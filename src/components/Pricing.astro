@@ -4,9 +4,9 @@ const tiers = [
     name: 'Free',
     price: '$0',
     period: 'forever',
-    tagline: 'Try it. Process your first 100 docs.',
-    docs: '100',
-    pages: '25',
+    tagline: 'Evaluate with real documents. 500 docs/month, no credit card.',
+    docs: '500',
+    pages: '100',
     concurrency: '1',
     overage: false,
     features: [
@@ -15,55 +15,36 @@ const tiers = [
       'All extraction strategies',
       'Community support',
     ],
-    cta: 'Join the waitlist',
+    cta: 'Get started',
     ctaType: 'waitlist' as const,
     featured: false,
-  },
-  {
-    name: 'Pro',
-    price: '$49',
-    period: '/month',
-    tagline: 'Everything you need to process documents at a real cadence.',
-    docs: '500',
-    pages: '100',
-    concurrency: '5',
-    overage: '$0.10 / doc',
-    features: [
-      'Everything in Free',
-      'Email support (24h SLA)',
-      'Per-field confidence scores',
-      '90-day job history',
-      'Webhooks & API',
-    ],
-    cta: 'Join the waitlist',
-    ctaType: 'waitlist' as const,
-    featured: true,
   },
   {
     name: 'Scale',
-    price: '$299',
+    price: '$499',
     period: '/month',
-    tagline: 'For teams processing complex, multi-hundred-page documents.',
+    tagline: 'For teams running production extraction workloads.',
     docs: '5,000',
-    pages: '500',
+    pages: '100',
     concurrency: '20',
     overage: '$0.08 / doc',
     features: [
-      'Everything in Pro',
+      'Everything in Free',
+      'HITL review queue',
+      'Benchmarks & model comparison',
       'Priority support (4h SLA)',
-      'Volume overage pricing',
-      'Longer job retention',
+      'Webhooks, API & RBAC',
       'Advanced usage analytics',
     ],
-    cta: 'Join the waitlist',
+    cta: 'Start Scale',
     ctaType: 'waitlist' as const,
-    featured: false,
+    featured: true,
   },
   {
     name: 'Enterprise',
     price: 'Custom',
     period: '',
-    tagline: 'Compliance, dedicated infrastructure, and a throat to choke.',
+    tagline: 'Compliance, long documents, and a dedicated team behind you.',
     docs: 'Custom',
     pages: 'Unlimited',
     concurrency: 'Custom',
@@ -257,7 +238,7 @@ const tiers = [
 
   .tiers {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1rem;
   }
 
@@ -515,20 +496,12 @@ const tiers = [
 
   /* Responsive =========================================================== */
 
-  @media (max-width: 1100px) {
-    .tiers {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
   @media (max-width: 900px) {
     .pricing-head {
       grid-template-columns: 1fr;
       gap: 2rem;
     }
-  }
 
-  @media (max-width: 560px) {
     .tiers {
       grid-template-columns: 1fr;
     }
