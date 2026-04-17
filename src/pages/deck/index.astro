@@ -1,0 +1,951 @@
+---
+/**
+ * Sales Deck — multi-page enterprise sales document.
+ * Pattern follows /brief but is longer (13 slides + appendix).
+ * Prints to PDF via browser print dialog.
+ * Shareable URL the CRO sends to prospects.
+ */
+import BrandMark from '../../components/BrandMark.astro';
+import '../../styles/global.css';
+
+const benchmarks = [
+  { category: 'SEC Filings · IRS Forms · Multi-Format', docs: 124,  fields: '577/577',     accuracy: '100.0%', highlight: true },
+  { category: 'Insurance Certificates', docs: 61,   fields: '291/305',     accuracy: '95.4%',  highlight: false },
+  { category: 'Insurance Policies',     docs: 97,   fields: '727/763',     accuracy: '95.3%',  highlight: false },
+  { category: 'Insurance Claims',       docs: 152,  fields: '944/1,020',   accuracy: '92.5%',  highlight: false },
+  { category: 'Adversarial',           docs: 11,   fields: '55/60',       accuracy: '91.7%',  highlight: false },
+  { category: 'Invoices',              docs: 107,  fields: '478/532',     accuracy: '89.8%',  highlight: false },
+];
+
+const competitors = [
+  { name: 'Koji',         byo: '✓', selfHost: '✓', schemaSystem: 'Full type system',  corpus: '✓', hitl: '✓', trace: '✓', pricing: '$0 / $499 / Custom' },
+  { name: 'FurtherAI',    byo: '—', selfHost: '—', schemaSystem: 'Opaque',            corpus: '—', hitl: '—', trace: '—', pricing: 'Enterprise only' },
+  { name: 'LlamaCloud',   byo: '—', selfHost: '—', schemaSystem: 'Field list',        corpus: '—', hitl: '—', trace: '—', pricing: 'Opaque credits' },
+  { name: 'Reducto',      byo: '—', selfHost: '—', schemaSystem: 'Field list',        corpus: '—', hitl: '—', trace: '—', pricing: 'Opaque credits' },
+  { name: 'Unstructured', byo: '—', selfHost: 'Crippled', schemaSystem: 'No schema', corpus: '—', hitl: '—', trace: '—', pricing: 'Enterprise only' },
+];
+
+const insuranceBreakdown = [
+  { sub: 'Demand Letters', docs: 30, accuracy: '96.7%', notes: 'Free-text with state-from-address derivation' },
+  { sub: 'Certificates',  docs: 61, accuracy: '95.4%', notes: 'Certificates of liability' },
+  { sub: 'Policies',     docs: 97,  accuracy: '95.3%', notes: 'Dec pages, endorsements, schedules' },
+  { sub: 'Claims (filled)', docs: 50, accuracy: '93.6%', notes: 'ACORD-style claim forms' },
+  { sub: 'Loss Runs',     docs: 50, accuracy: '90.8%', notes: 'Multi-page tabular, header carry-forward in dev' },
+];
+
+const subprocessors = [
+  { name: 'Cloudflare', purpose: 'Infrastructure (Workers, Pages, Containers, R2)', location: 'Global' },
+  { name: 'Neon',       purpose: 'Postgres database', location: 'Selectable' },
+  { name: 'Clerk',      purpose: 'Authentication', location: 'US' },
+  { name: 'Stripe',     purpose: 'Payment processing', location: 'US' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Koji — Production-grade document extraction. Sales deck for enterprise buyers." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <title>Koji — Sales Deck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+  </noscript>
+</head>
+<body>
+  <!-- Toolbar -->
+  <div class="deck-toolbar no-print">
+    <a href="/" class="back-link">
+      <span class="arrow">←</span>
+      <span>getkoji.dev</span>
+    </a>
+    <button type="button" class="print-btn" data-print>
+      <span>Download PDF</span>
+      <span class="arrow">↓</span>
+    </button>
+  </div>
+
+  <main class="deck">
+
+    <!-- ============================================ -->
+    <!-- SLIDE 1: Title                               -->
+    <!-- ============================================ -->
+    <section class="slide slide-title">
+      <div class="brand">
+        <BrandMark size={42} />
+        <span class="wordmark">koji</span>
+      </div>
+      <h1 class="title-headline">
+        Production-grade<br/>document extraction.
+      </h1>
+      <p class="title-sub">Your models. Your infrastructure. Your data.</p>
+      <p class="title-url">getkoji.dev</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 2: The Problem                         -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">01</span> The Problem</div>
+      <h2 class="slide-heading">"Just call an LLM" works for demos.<br/><em class="accent">It breaks in production.</em></h2>
+      <div class="problem-grid">
+        <div class="problem-item">
+          <span class="problem-icon">✗</span>
+          <div><strong>No validation</strong><br/>The model hallucinates enum values and fills blank fields with guesses</div>
+        </div>
+        <div class="problem-item">
+          <span class="problem-icon">✗</span>
+          <div><strong>No versioning</strong><br/>You change the prompt and can't tell if accuracy got better or worse</div>
+        </div>
+        <div class="problem-item">
+          <span class="problem-icon">✗</span>
+          <div><strong>No confidence scoring</strong><br/>Everything looks equally certain, even when it's wrong</div>
+        </div>
+        <div class="problem-item">
+          <span class="problem-icon">✗</span>
+          <div><strong>No review routing</strong><br/>Low-confidence results go straight to your database</div>
+        </div>
+        <div class="problem-item">
+          <span class="problem-icon">✗</span>
+          <div><strong>No audit trail</strong><br/>"What did we extract 3 months ago?" is unanswerable</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 3: What Koji Is                        -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">02</span> The Solution</div>
+      <h2 class="slide-title">Koji is the production layer between<br/>your AI models and your structured data.</h2>
+      <div class="pillars">
+        <div class="pillar">
+          <h3>Schema-first</h3>
+          <p>Define what you want as versioned, validated YAML — not a prompt you tune by feel.</p>
+        </div>
+        <div class="pillar">
+          <h3>BYO models</h3>
+          <p>Run on your own OpenAI, Anthropic, Azure, Bedrock, or Ollama endpoint. We orchestrate; you own the inference.</p>
+        </div>
+        <div class="pillar">
+          <h3>Self-hostable</h3>
+          <p><code>docker compose up</code> on your infrastructure. Your data never leaves your network. Apache 2.0.</p>
+        </div>
+        <div class="pillar">
+          <h3>Measurably accurate</h3>
+          <p>Every schema has a corpus. Every change has a benchmark. Every regression is caught before it ships.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 4: The Schema Advantage                -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">03</span> The Schema Advantage</div>
+      <h2 class="slide-heading" style="white-space:nowrap">Not field lists. <em class="accent">A type system for extraction.</em></h2>
+      <div class="schema-split">
+        <div class="schema-code">
+          <pre><code>description_of_loss:
+  type: string
+  nullable: true
+  importance: high
+  review_below: 0.85
+  extraction_guidance: |
+    Extract from the narrative section.
+    NOT a classification code.
+  validate:
+    min_words: 20
+    on_fail: null
+
+state:
+  derived_from: address
+  method: us_state_lookup
+
+form_type:
+  type: enum
+  values: [Loss Run, Demand Letter]
+  validate:
+    on_miss: snap_closest</code></pre>
+        </div>
+        <div class="schema-features">
+          <div class="schema-feat"><strong>Types & validation</strong> — min/max, regex, enum snapping, word count</div>
+          <div class="schema-feat"><strong>Normalization</strong> — dates to ISO 8601, currency to minor units, locale-aware parsing</div>
+          <div class="schema-feat"><strong>Derived fields</strong> — state from address, first/last/sum from arrays</div>
+          <div class="schema-feat"><strong>Extraction guidance</strong> — per-field prompt hints for the model</div>
+          <div class="schema-feat"><strong>Confidence thresholds</strong> — per-field HITL routing: below 0.85 → human review</div>
+          <div class="schema-feat"><strong>Merge strategies</strong> — per-field rules for combining multi-chunk results</div>
+          <p class="schema-note">No competitor offers this level of configurability.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 5: Pipeline                            -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">04</span> The Pipeline</div>
+      <h2 class="slide-title">Eight stages. Each one traces. Each one retries independently.</h2>
+      <div class="pipeline-flow">
+        <div class="stage">Preflight</div>
+        <span class="arrow-right">→</span>
+        <div class="stage">OCR</div>
+        <span class="arrow-right">→</span>
+        <div class="stage">Chunk</div>
+        <span class="arrow-right">→</span>
+        <div class="stage">Route</div>
+        <span class="arrow-right">→</span>
+        <div class="stage stage-extract">Extract</div>
+        <span class="arrow-right">→</span>
+        <div class="stage">Merge</div>
+        <span class="arrow-right">→</span>
+        <div class="stage">Score</div>
+        <span class="arrow-right">→</span>
+        <div class="stage">Validate</div>
+      </div>
+      <div class="pipeline-detail">
+        <div class="detail-item"><strong>Preflight</strong> — MIME check, size, dedup, OCR detection</div>
+        <div class="detail-item"><strong>OCR</strong> — native text or vision bypass for thermal/scanned</div>
+        <div class="detail-item"><strong>Chunk</strong> — semantic, page, overlap, row-based, with header carry-forward</div>
+        <div class="detail-item"><strong>Route</strong> — pick the right model per chunk, fallback chains</div>
+        <div class="detail-item"><strong>Extract</strong> — structured output via your BYO endpoint</div>
+        <div class="detail-item"><strong>Merge</strong> — combine chunks with conflict detection</div>
+        <div class="detail-item"><strong>Score</strong> — per-field confidence from model logprobs + agreement signals</div>
+        <div class="detail-item"><strong>Validate</strong> — schema rules enforced, soft violations lower confidence</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 6: BYO Pricing                         -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">05</span> BYO Inference</div>
+      <h2 class="slide-title">You pay your models, not us.<br/><em class="accent">We never touch the inference bill.</em></h2>
+      <div class="byo-split">
+        <div class="byo-col">
+          <h3 class="byo-heading">What you pay Koji</h3>
+          <p>Platform subscription ($499/mo Scale)</p>
+          <p>Per-document overage ($0.08/doc above 5,000/mo)</p>
+          <p class="byo-emphasis">Transparent. Predictable. Two line items.</p>
+        </div>
+        <div class="byo-col">
+          <h3 class="byo-heading">What you pay your AI vendor</h3>
+          <p>Your contracted rate — OpenAI, Anthropic, Azure, Bedrock, Ollama</p>
+          <p>Your existing cloud commitment, unchanged</p>
+          <p class="byo-emphasis">Your relationship. Your negotiated pricing.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 7: Benchmarks                          -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">06</span> Accuracy</div>
+      <h2 class="slide-heading">552 documents. 3,257 fields. 5 domains.<br/><em class="accent">Six categories above 95%. All above 89%.</em></h2>
+      <table class="bench-table" style="margin-top:-2rem">
+        <thead>
+          <tr><th>Category</th><th>Docs</th><th>Fields</th><th>Accuracy</th></tr>
+        </thead>
+        <tbody>
+          {benchmarks.map(b => (
+            <tr class={b.highlight ? 'highlight' : ''}>
+              <td>{b.category}</td>
+              <td class="mono">{b.docs}</td>
+              <td class="mono">{b.fields}</td>
+              <td class="mono accuracy">{b.accuracy}</td>
+            </tr>
+          ))}
+          <tr class="total-row">
+            <td><strong>Total</strong></td>
+            <td class="mono"><strong>552</strong></td>
+            <td class="mono"><strong>3,072/3,257</strong></td>
+            <td class="mono accuracy"><strong>94.3%</strong></td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="bench-note">Held-out documents + adversarial cases. Full corpus available for independent benchmarking.</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 8: Quality Loop                        -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">07</span> The Quality Loop</div>
+      <h2 class="slide-title">Accuracy isn't a number.<br/><em class="accent">It's a system.</em></h2>
+      <div class="loop-diagram">
+        <div class="loop-step">Define Schema</div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-step">Build Corpus</div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-step">Run Validate</div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-step">See Regressions</div>
+        <span class="loop-arrow">→</span>
+        <div class="loop-step">Fix & Rebench</div>
+        <span class="loop-arrow loop-return">↩</span>
+      </div>
+      <div class="loop-features">
+        <div class="loop-feat"><strong>Corpus</strong> — ground-truth documents scored against your schema. Grows from production.</div>
+        <div class="loop-feat"><strong>Validate</strong> — every schema change runs against the corpus. Per-field regressions visible.</div>
+        <div class="loop-feat"><strong>Benchmark</strong> — compare models head-to-head on your corpus. Cost vs accuracy.</div>
+        <div class="loop-feat"><strong>Deploy gate</strong> — regressing schemas cannot deploy. CI-enforceable.</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 9: Trace View                          -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">08</span> Trace View</div>
+      <h2 class="slide-title">Every document gets a full trace.</h2>
+      <div class="trace-features">
+        <div class="trace-feat">Waterfall timeline of every pipeline stage with duration and cost</div>
+        <div class="trace-feat">Per-field confidence scores with threshold markers</div>
+        <div class="trace-feat">Exact model input and output at each stage</div>
+        <div class="trace-feat">HITL routing decision — why it went to review, or didn't</div>
+        <div class="trace-feat">Error details with classification: our fault vs your data vs provider</div>
+        <div class="trace-feat">Paste a document ID, see what happened in 5 seconds</div>
+      </div>
+      <p class="trace-note">When a customer calls and says "this extraction is wrong," you paste the ID and see exactly what happened.</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 10: Security                           -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">09</span> Security & Compliance</div>
+      <h2 class="slide-title">Honest about what's certified.<br/><em class="accent">Clear about what's next.</em></h2>
+      <div class="compliance-grid">
+        <div class="compliance-item done"><span class="check">✓</span> TLS 1.2+ in transit</div>
+        <div class="compliance-item done"><span class="check">✓</span> Encryption at rest</div>
+        <div class="compliance-item done"><span class="check">✓</span> Postgres Row-Level Security</div>
+        <div class="compliance-item done"><span class="check">✓</span> RBAC with 7 roles</div>
+        <div class="compliance-item done"><span class="check">✓</span> Audit log (up to 7yr retention)</div>
+        <div class="compliance-item done"><span class="check">✓</span> Self-hostable (your VPC)</div>
+        <div class="compliance-item done"><span class="check">✓</span> BYO model endpoints</div>
+        <div class="compliance-item done"><span class="check">✓</span> DPA available</div>
+        <div class="compliance-item planned"><span class="clock">◐</span> SOC 2 Type 1 — Q4 2026</div>
+        <div class="compliance-item planned"><span class="clock">◐</span> SOC 2 Type 2 — 2027</div>
+        <div class="compliance-item done"><span class="check">✓</span> SSO / SAML (Enterprise)</div>
+        <div class="compliance-item planned"><span class="clock">◐</span> HIPAA BAA — on request</div>
+      </div>
+      <p class="compliance-note">Full posture: getkoji.dev/compliance</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 11: Deployment                         -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">10</span> Deployment</div>
+      <h2 class="slide-title">Same code, three runtimes.</h2>
+      <div class="deploy-options">
+        <div class="deploy-opt">
+          <h3>Koji Cloud</h3>
+          <p>We host it. You configure your schema, connect your endpoint, process documents. Zero ops burden.</p>
+        </div>
+        <div class="deploy-opt">
+          <h3>Self-Hosted</h3>
+          <p><code>docker compose up</code> with bundled Postgres. Same product, same dashboard. Your data stays in your network. Apache 2.0.</p>
+        </div>
+        <div class="deploy-opt">
+          <h3>Enterprise Managed</h3>
+          <p>We help you deploy in your cloud or on-prem. Helm chart, dedicated support, custom SLA, compliance artifacts.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 12: Pricing                            -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">11</span> Pricing</div>
+      <h2 class="slide-title">Simple pricing. <em class="accent">No surprises.</em></h2>
+      <table class="pricing-table">
+        <thead>
+          <tr><th></th><th>Free</th><th>Scale</th><th>Enterprise</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Price</td><td class="mono">$0</td><td class="mono"><strong>$499/mo</strong></td><td class="mono">Custom</td></tr>
+          <tr><td>Documents/mo</td><td class="mono">500</td><td class="mono">5,000</td><td class="mono">Negotiated</td></tr>
+          <tr><td>Overage</td><td class="mono">—</td><td class="mono">$0.08/doc</td><td class="mono">Negotiated</td></tr>
+          <tr><td>Pages/doc</td><td class="mono">100</td><td class="mono">100</td><td class="mono">Unlimited</td></tr>
+          <tr><td>HITL Review</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Benchmarks</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>SSO / SAML</td><td>—</td><td>—</td><td>✓</td></tr>
+          <tr><td>Support</td><td>Community</td><td>Priority 4h</td><td>Dedicated</td></tr>
+        </tbody>
+      </table>
+      <p class="pricing-note">BYO inference on all tiers. Self-hosted gets the Scale feature set for free.</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 13: Next Steps                         -->
+    <!-- ============================================ -->
+    <section class="slide slide-cta">
+      <div class="slide-label"><span class="num">12</span> Next Steps</div>
+      <h2 class="slide-title">Start with your hardest document type.<br/><em class="accent">Prove it works there first.</em></h2>
+      <div class="next-steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div><strong>Pilot.</strong> 30-day paid pilot. We define success criteria together. Hit them → contract converts. Miss them → walk away.</div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div><strong>Your documents.</strong> Run our benchmark suite against your actual corpus. See the numbers before you commit.</div>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <div><strong>Your infrastructure.</strong> Deploy on your infra or spin up a hosted tenant — your choice.</div>
+        </div>
+      </div>
+      <p class="contact">sales@getkoji.dev</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- APPENDIX                                     -->
+    <!-- ============================================ -->
+    <div class="appendix-divider">
+      <span>Appendix — Technical Deep-Dive</span>
+    </div>
+
+    <!-- A1: Competitor Matrix -->
+    <section class="slide slide-appendix">
+      <div class="slide-label"><span class="num">A1</span> Competitor Comparison</div>
+      <table class="comp-table">
+        <thead>
+          <tr><th></th><th>BYO</th><th>Self-Host</th><th>Schema</th><th>Corpus</th><th>HITL</th><th>Trace</th><th>Entry Price</th></tr>
+        </thead>
+        <tbody>
+          {competitors.map(c => (
+            <tr class={c.name === 'Koji' ? 'koji-row' : ''}>
+              <td><strong>{c.name}</strong></td>
+              <td>{c.byo}</td>
+              <td>{c.selfHost}</td>
+              <td>{c.schemaSystem}</td>
+              <td>{c.corpus}</td>
+              <td>{c.hitl}</td>
+              <td>{c.trace}</td>
+              <td class="mono">{c.pricing}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+
+    <!-- A2: Insurance Breakdown -->
+    <section class="slide slide-appendix">
+      <div class="slide-label"><span class="num">A2</span> Insurance-Specific Accuracy</div>
+      <table class="bench-table">
+        <thead>
+          <tr><th>Sub-category</th><th>Docs</th><th>Accuracy</th><th>Notes</th></tr>
+        </thead>
+        <tbody>
+          {insuranceBreakdown.map(b => (
+            <tr>
+              <td>{b.sub}</td>
+              <td class="mono">{b.docs}</td>
+              <td class="mono accuracy">{b.accuracy}</td>
+              <td class="notes">{b.notes}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="bench-note">288 insurance documents across 5 sub-categories. 93.2% overall. Improving weekly.</p>
+    </section>
+
+    <!-- A3: Billing Credits -->
+    <section class="slide slide-appendix">
+      <div class="slide-label"><span class="num">A3</span> Billing — Credits for Our Bugs</div>
+      <div class="credits-list">
+        <div class="credit-item credit-good"><strong>Successful extraction</strong> → billed</div>
+        <div class="credit-item credit-refund"><strong>Koji infrastructure failure</strong> → automatic credit (you don't pay for our bugs)</div>
+        <div class="credit-item credit-good"><strong>Your schema / input issue</strong> → billed (disputable on request)</div>
+        <div class="credit-item credit-neutral"><strong>Preflight rejection</strong> → not billed (no work done)</div>
+        <div class="credit-item credit-neutral"><strong>Deduped document</strong> → not billed (cached result)</div>
+      </div>
+      <p class="bench-note">Your invoice shows billed + credited separately. The credit line is always visible, even when zero.</p>
+    </section>
+
+    <!-- A4: Sub-processors -->
+    <section class="slide slide-appendix">
+      <div class="slide-label"><span class="num">A4</span> Sub-processors</div>
+      <table class="bench-table">
+        <thead>
+          <tr><th>Provider</th><th>Purpose</th><th>Location</th></tr>
+        </thead>
+        <tbody>
+          {subprocessors.map(s => (
+            <tr>
+              <td>{s.name}</td>
+              <td>{s.purpose}</td>
+              <td class="mono">{s.location}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="bench-note">Your model endpoints are NOT our sub-processors. They're your relationship, billed to you.</p>
+    </section>
+
+    <!-- A5: Roadmap -->
+    <section class="slide slide-appendix">
+      <div class="slide-label"><span class="num">A5</span> Roadmap</div>
+      <div class="roadmap-list">
+        <div class="roadmap-item"><span class="roadmap-status status-dev">In dev</span> Vision bypass — skip OCR, send images to multimodal models</div>
+        <div class="roadmap-item"><span class="roadmap-status status-dev">In dev</span> Header carry-forward for multi-page tables</div>
+        <div class="roadmap-item"><span class="roadmap-status status-dev">In dev</span> Locale-aware date/currency normalization</div>
+        <div class="roadmap-item"><span class="roadmap-status status-planned">Planned</span> SOC 2 Type 1 — Q4 2026</div>
+        <div class="roadmap-item"><span class="roadmap-status status-planned">Planned</span> SCIM provisioning — 4-8 weeks from commitment</div>
+        <div class="roadmap-item"><span class="roadmap-status status-planned">Planned</span> Multi-region data residency — 2027</div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    document.querySelectorAll<HTMLButtonElement>('[data-print]').forEach(btn => {
+      btn.addEventListener('click', () => window.print());
+    });
+  </script>
+
+  <style is:global>
+    @page {
+      size: 11in 6.2in;
+      margin: 0;
+    }
+
+    @media print {
+      html, body {
+        background: #F4EEE2 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .no-print { display: none !important; }
+      .deck {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+      /* Every slide = one page */
+      .slide {
+        page-break-after: always;
+        page-break-inside: avoid;
+        break-after: page;
+        break-inside: avoid;
+        padding: 0.5in 0.75in !important;
+        border-bottom: none !important;
+        height: 6.2in;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      .slide:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+      /* Title slide — centered */
+      .slide.slide-title {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0.5in 0.75in !important;
+      }
+      .slide-heading {
+        font-size: 2.1rem !important;
+        margin-bottom: 1.5rem !important;
+        line-height: 1.15 !important;
+      }
+      .slide-label {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.75rem !important;
+        letter-spacing: 0.16em !important;
+      }
+      .title-headline {
+        font-size: 3.2rem !important;
+      }
+      .title-sub {
+        font-size: 1.4rem !important;
+      }
+      .title-url {
+        font-size: 1.1rem !important;
+      }
+      .wordmark {
+        font-size: 3rem !important;
+      }
+      /* Body text sized for slides */
+      .problem-item, .pillar p, .schema-feat, .detail-item,
+      .byo-col p, .loop-feat, .trace-feat, .compliance-item,
+      .deploy-opt p, .step, .credit-item, .roadmap-item {
+        font-size: 1.05rem !important;
+        line-height: 1.55 !important;
+      }
+      .problem-item strong, .pillar h3, .deploy-opt h3 {
+        font-size: 1.15rem !important;
+      }
+      .pillar h3, .deploy-opt h3, .byo-heading {
+        margin-bottom: 0.4rem !important;
+      }
+      .byo-emphasis {
+        font-size: 1.1rem !important;
+      }
+      .bench-table, .pricing-table, .comp-table {
+        font-size: 1rem !important;
+      }
+      .bench-table th, .pricing-table th, .comp-table th {
+        font-size: 0.8rem !important;
+        padding: 0.6rem 0.75rem !important;
+      }
+      .bench-table td, .pricing-table td, .comp-table td {
+        padding: 0.55rem 0.75rem !important;
+      }
+      .bench-note, .compliance-note, .pricing-note, .trace-note {
+        font-size: 0.9rem !important;
+      }
+      .contact {
+        font-size: 1.3rem !important;
+      }
+      .step-num {
+        font-size: 1.6rem !important;
+      }
+      /* Grids breathe more */
+      .problem-grid { gap: 0.85rem 2rem !important; }
+      .pillars { gap: 1.5rem !important; }
+      .compliance-grid { gap: 0.6rem !important; }
+      .deploy-options { gap: 1.25rem !important; }
+      .pipeline-flow { gap: 0.5rem !important; }
+      .pipeline-detail { gap: 0.6rem 2rem !important; }
+      .stage { padding: 0.55rem 0.85rem !important; font-size: 0.8rem !important; }
+      .loop-step { padding: 0.55rem 0.9rem !important; font-size: 0.8rem !important; }
+      .schema-code pre { font-size: 0.78rem !important; line-height: 1.6 !important; }
+      /* Appendix divider — its own page */
+      .appendix-divider {
+        page-break-after: always;
+        break-after: page;
+        page-break-inside: avoid;
+        height: 6.2in;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 0 0.75in !important;
+        font-size: 0.85rem !important;
+        box-sizing: border-box;
+      }
+      /* Appendix slides — same spacing as main slides */
+      .slide-appendix {
+        padding: 0.5in 0.75in !important;
+      }
+      /* Schema code fits in landscape */
+      .schema-code pre {
+        font-size: 0.7rem !important;
+        padding: 0.75rem !important;
+      }
+      /* Slide label pinned to top */
+      .slide-label {
+        margin-bottom: 0.5rem !important;
+      }
+    }
+
+    body {
+      background: #E8DFC9;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Instrument Sans', -apple-system, sans-serif;
+      color: #171410;
+    }
+
+    /* Toolbar */
+    .deck-toolbar {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(232, 223, 201, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(23, 20, 16, 0.08);
+    }
+    .deck-toolbar .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+      color: #3A3328; text-decoration: none; transition: color 0.2s;
+    }
+    .deck-toolbar .back-link:hover { color: #C33520; }
+    .deck-toolbar .back-link:hover .arrow { transform: translateX(-3px); }
+    .deck-toolbar .back-link .arrow, .print-btn .arrow { transition: transform 0.3s ease-out; }
+    .print-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.55rem 1rem; background: #171410; color: #F4EEE2;
+      border: none; border-radius: 2px;
+      font-family: 'Instrument Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; transition: background 0.3s;
+    }
+    .print-btn:hover { background: #C33520; }
+    .print-btn:hover .arrow { transform: translateY(2px); }
+
+    /* Deck container */
+    .deck {
+      max-width: 8.5in;
+      margin: 2rem auto 4rem;
+      background: #F4EEE2;
+      box-shadow: 0 24px 80px rgba(23, 20, 16, 0.12);
+      padding: 0.5in 0.7in;
+    }
+
+    /* Slides */
+    .slide {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid rgba(23, 20, 16, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 420px;
+    }
+    .slide:last-child { border-bottom: none; }
+
+    .slide-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: #8A847B; margin-bottom: 0.85rem;
+    }
+    .slide-label .num { color: #C33520; margin-right: 0.5rem; }
+
+    .slide-heading {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144, 'SOFT' 50;
+      font-size: clamp(1.8rem, 3.5vw, 2.2rem);
+      font-weight: 500; letter-spacing: -0.02em;
+      line-height: 1.15; margin: 0; padding-bottom: 1.25rem;
+    }
+    .accent {
+      color: #C33520; font-style: italic;
+      font-variation-settings: 'opsz' 144, 'SOFT' 100;
+    }
+
+    /* Title slide */
+    .slide.slide-title {
+      text-align: center; padding: 4rem 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 50vh; border-bottom: none;
+    }
+    .slide.slide-title .brand { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; }
+    .wordmark {
+      font-family: 'Fraunces', serif; font-size: 3rem;
+      font-variation-settings: 'opsz' 144, 'SOFT' 30;
+      font-weight: 500; letter-spacing: -0.015em; line-height: 1;
+    }
+    .title-headline {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144, 'SOFT' 50;
+      font-size: clamp(2.4rem, 5vw, 3.2rem);
+      font-weight: 500; letter-spacing: -0.025em; line-height: 1.1;
+      margin: 0 0 1.25rem;
+    }
+    .title-sub { font-size: 1.4rem; color: #3A3328; margin: 0 0 0.75rem; }
+    .title-url { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: #C33520; margin: 0; }
+
+    /* Problem grid */
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 2.5rem; margin-top: 0.5rem; }
+    .problem-item {
+      display: flex; gap: 0.7rem; font-size: 1.05rem; line-height: 1.5; color: #3A3328;
+    }
+    .problem-icon { color: #C33520; font-weight: 600; flex-shrink: 0; margin-top: 2px; font-size: 1.1rem; }
+    .problem-item strong { color: #171410; font-size: 1.1rem; }
+
+    /* Pillars */
+    .pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; margin-top: 0.5rem; }
+    .pillar h3 {
+      font-family: 'Fraunces', serif; font-size: 1.2rem; font-weight: 500;
+      margin: 0 0 0.4rem; color: #171410;
+    }
+    .pillar p { font-size: 1.05rem; color: #3A3328; margin: 0; line-height: 1.55; }
+
+    /* Schema split */
+    .schema-split { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; margin-top: -0.5rem; }
+    .schema-code pre {
+      background: #171410; color: #F4EEE2; padding: 1.5rem;
+      border-radius: 3px; font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem; line-height: 1.6; overflow-x: auto; margin: 0;
+    }
+    .schema-features { display: flex; flex-direction: column; gap: 0.75rem; }
+    .schema-feat { font-size: 1.05rem; line-height: 1.5; color: #3A3328; }
+    .schema-feat strong { color: #171410; }
+    .schema-note {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+      color: #C33520; margin-top: 0.75rem; font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* Pipeline */
+    .pipeline-flow {
+      display: flex; align-items: center; gap: 0.5rem;
+      flex-wrap: wrap; margin-top: 0.5rem; margin-bottom: 2.25rem;
+    }
+    .stage {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 500;
+      padding: 0.55rem 0.9rem; border: 1px solid rgba(23, 20, 16, 0.15);
+      border-radius: 2px; background: #FBF7EB;
+    }
+    .stage-extract { background: #C33520; color: #F4EEE2; border-color: #C33520; }
+    .arrow-right { color: #8A847B; font-size: 1rem; }
+    .pipeline-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem 2.5rem; }
+    .detail-item { font-size: 1rem; color: #3A3328; line-height: 1.5; }
+    .detail-item strong { color: #171410; }
+
+    /* BYO split */
+    .byo-split { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 0.5rem; }
+    .byo-col {
+      padding: 1.5rem; border: 1px solid rgba(23, 20, 16, 0.12); border-radius: 3px;
+    }
+    .byo-heading {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #8A847B;
+      margin: 0 0 1rem;
+    }
+    .byo-col p { font-size: 1.05rem; color: #3A3328; margin: 0 0 0.5rem; line-height: 1.55; }
+    .byo-emphasis { color: #C33520 !important; font-weight: 500; font-size: 1.1rem; margin-top: 1rem !important; }
+
+    /* Tables */
+    .bench-table, .pricing-table, .comp-table {
+      width: 100%; border-collapse: collapse; font-size: 0.95rem;
+    }
+    .bench-table th, .pricing-table th, .comp-table th {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #8A847B; text-align: left; padding: 0.45rem 0.85rem;
+      border-bottom: 2px solid rgba(23, 20, 16, 0.15);
+    }
+    .bench-table td, .pricing-table td, .comp-table td {
+      padding: 0.4rem 0.85rem; border-bottom: 1px solid rgba(23, 20, 16, 0.06);
+      color: #3A3328;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.95rem; }
+    .accuracy { color: #171410; font-weight: 500; }
+    .highlight td { background: rgba(195, 53, 32, 0.04); }
+    .total-row td { border-top: 2px solid rgba(23, 20, 16, 0.15); background: rgba(23, 20, 16, 0.02); }
+    .bench-note, .compliance-note, .pricing-note, .trace-note {
+      font-size: 0.9rem; color: #8A847B; margin-top: 0.85rem;
+      font-style: italic;
+    }
+    .notes { font-size: 0.88rem; color: #8A847B; }
+    .koji-row td { background: rgba(195, 53, 32, 0.04); font-weight: 500; }
+
+    /* Quality loop */
+    .loop-diagram {
+      display: flex; align-items: center; gap: 0.5rem;
+      flex-wrap: wrap; margin-top: 0.5rem; margin-bottom: 2.25rem;
+    }
+    .loop-step {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 500;
+      padding: 0.6rem 1rem; border: 1px solid rgba(23, 20, 16, 0.15);
+      border-radius: 2px; background: #FBF7EB;
+    }
+    .loop-arrow { color: #8A847B; font-size: 1.1rem; }
+    .loop-return { color: #C33520; font-weight: 600; }
+    .loop-features { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 2rem; }
+    .loop-feat { font-size: 1.05rem; color: #3A3328; line-height: 1.5; }
+    .loop-feat strong { color: #171410; }
+
+    /* Trace */
+    .trace-features { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem 2rem; }
+    .trace-feat {
+      font-size: 1.05rem; color: #3A3328; line-height: 1.5;
+      padding-left: 1.25rem; position: relative;
+    }
+    .trace-feat::before {
+      content: '—'; position: absolute; left: 0; color: #C33520;
+    }
+
+    /* Compliance */
+    .compliance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-top: 0.5rem; }
+    .compliance-item { font-size: 1.05rem; display: flex; align-items: center; gap: 0.6rem; }
+    .compliance-item.done { color: #171410; }
+    .compliance-item.planned { color: #8A847B; }
+    .check { color: #2D8A4E; font-weight: 600; font-size: 1.1rem; }
+    .clock { color: #B08D2D; font-size: 1.1rem; }
+
+    /* Deploy options */
+    .deploy-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem; }
+    .deploy-opt {
+      padding: 1.5rem; border: 1px solid rgba(23, 20, 16, 0.12); border-radius: 3px;
+    }
+    .deploy-opt h3 {
+      font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 500;
+      margin: 0 0 0.5rem;
+    }
+    .deploy-opt p { font-size: 1.05rem; color: #3A3328; margin: 0; line-height: 1.55; }
+    .deploy-opt code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+      background: rgba(23, 20, 16, 0.05); padding: 0.15rem 0.4rem; border-radius: 2px;
+    }
+
+    /* CTA slide */
+    .next-steps { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 2rem; }
+    .step { display: flex; gap: 1rem; font-size: 1.1rem; line-height: 1.55; color: #3A3328; }
+    .step strong { color: #171410; }
+    .step-num {
+      font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 500;
+      color: #C33520; flex-shrink: 0; line-height: 1.3;
+    }
+    .contact {
+      font-family: 'JetBrains Mono', monospace; font-size: 1.3rem;
+      color: #C33520; font-weight: 500;
+    }
+
+    /* Appendix */
+    .appendix-divider {
+      text-align: center; padding: 2.5rem 0 1rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+      font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+      color: #8A847B;
+    }
+    .slide-appendix { padding: 2rem 0; }
+    .slide-appendix .slide-heading { font-size: 1.5rem; }
+
+    /* Credits */
+    .credits-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .credit-item {
+      font-size: 1.05rem; padding: 0.7rem 1rem; border-radius: 2px;
+      border-left: 3px solid transparent; line-height: 1.5;
+    }
+    .credit-good { border-left-color: #2D8A4E; background: rgba(45, 138, 78, 0.04); }
+    .credit-refund { border-left-color: #C33520; background: rgba(195, 53, 32, 0.04); }
+    .credit-neutral { border-left-color: #8A847B; background: rgba(138, 132, 123, 0.04); }
+
+    /* Roadmap */
+    .roadmap-list { display: flex; flex-direction: column; gap: 0.75rem; }
+    .roadmap-item { font-size: 1.05rem; color: #3A3328; display: flex; align-items: center; gap: 1rem; line-height: 1.5; }
+    .roadmap-status {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 0.3rem 0.6rem; border-radius: 2px; flex-shrink: 0;
+    }
+    .status-dev { background: rgba(195, 53, 32, 0.08); color: #C33520; }
+    .status-planned { background: rgba(138, 132, 123, 0.1); color: #8A847B; }
+
+    /* Responsive */
+    @media (max-width: 720px) {
+      .deck { max-width: 100%; margin: 0; padding: 1rem 1.25rem; box-shadow: none; }
+      .deck-toolbar { padding: 0.75rem 1.25rem; }
+      .problem-grid, .pillars, .schema-split, .byo-split,
+      .pipeline-detail, .loop-features, .trace-features,
+      .compliance-grid, .deploy-options { grid-template-columns: 1fr; }
+      .pipeline-flow, .loop-diagram { gap: 0.25rem; }
+    }
+  </style>
+</body>
+</html>
