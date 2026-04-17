@@ -76,6 +76,28 @@ const subprocessors = [
     </button>
   </div>
 
+  <!-- Personalization bar -->
+  <div class="deck-personalize no-print">
+    <div class="personalize-fields">
+      <label>
+        <span>Customer</span>
+        <input type="text" id="cfg-customer" placeholder="Acme Insurance" />
+      </label>
+      <label>
+        <span>Logo URL</span>
+        <input type="text" id="cfg-logo" placeholder="https://..." />
+      </label>
+      <label>
+        <span>Presenter</span>
+        <input type="text" id="cfg-presenter" placeholder="Frank Thomas, Founder" />
+      </label>
+      <label>
+        <span>Contact</span>
+        <input type="text" id="cfg-contact" placeholder="sales@getkoji.dev" />
+      </label>
+    </div>
+  </div>
+
   <main class="deck">
 
     <!-- ============================================ -->
@@ -90,6 +112,14 @@ const subprocessors = [
         Production-grade<br/>document extraction.
       </h1>
       <p class="title-sub">Your models. Your infrastructure. Your data.</p>
+      <div class="title-personalized">
+        <div class="title-prepared" id="prepared-for" style="display:none">
+          <span class="prepared-label">Prepared for</span>
+          <span class="prepared-name" id="prepared-name"></span>
+          <img id="prepared-logo" class="prepared-logo" style="display:none" alt="" />
+        </div>
+        <p class="title-presenter" id="presenter-line" style="display:none"></p>
+      </div>
       <p class="title-url">getkoji.dev</p>
     </section>
 
@@ -410,7 +440,7 @@ form_type:
           <div><strong>Your infrastructure.</strong> Deploy on your infra or spin up a hosted tenant — your choice.</div>
         </div>
       </div>
-      <p class="contact">sales@getkoji.dev</p>
+      <p class="contact" id="contact-line">sales@getkoji.dev</p>
     </section>
 
     <!-- ============================================ -->
@@ -514,8 +544,78 @@ form_type:
   </main>
 
   <script>
+    // Print
     document.querySelectorAll<HTMLButtonElement>('[data-print]').forEach(btn => {
       btn.addEventListener('click', () => window.print());
+    });
+
+    // Personalization
+    const cfgCustomer = document.getElementById('cfg-customer') as HTMLInputElement;
+    const cfgLogo = document.getElementById('cfg-logo') as HTMLInputElement;
+    const cfgPresenter = document.getElementById('cfg-presenter') as HTMLInputElement;
+    const cfgContact = document.getElementById('cfg-contact') as HTMLInputElement;
+
+    const preparedFor = document.getElementById('prepared-for')!;
+    const preparedName = document.getElementById('prepared-name')!;
+    const preparedLogo = document.getElementById('prepared-logo') as HTMLImageElement;
+    const presenterLine = document.getElementById('presenter-line')!;
+    const contactLine = document.getElementById('contact-line')!;
+
+    function updatePersonalization() {
+      const customer = cfgCustomer.value.trim();
+      const logo = cfgLogo.value.trim();
+      const presenter = cfgPresenter.value.trim();
+      const contact = cfgContact.value.trim();
+
+      // Title slide: "Prepared for"
+      if (customer) {
+        preparedFor.style.display = 'flex';
+        preparedName.textContent = customer;
+      } else {
+        preparedFor.style.display = 'none';
+      }
+
+      // Logo
+      if (logo) {
+        preparedLogo.src = logo;
+        preparedLogo.style.display = 'block';
+      } else {
+        preparedLogo.style.display = 'none';
+      }
+
+      // Presenter
+      if (presenter) {
+        presenterLine.style.display = 'block';
+        presenterLine.textContent = presenter;
+      } else {
+        presenterLine.style.display = 'none';
+      }
+
+      // Contact
+      contactLine.textContent = contact || 'sales@getkoji.dev';
+
+      // Slide footers
+      const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.querySelectorAll('.slide-footer').forEach(el => {
+        if (customer) {
+          el.textContent = `Prepared for ${customer}  ·  ${today}  ·  Confidential`;
+          (el as HTMLElement).style.display = 'block';
+        } else {
+          (el as HTMLElement).style.display = 'none';
+        }
+      });
+    }
+
+    [cfgCustomer, cfgLogo, cfgPresenter, cfgContact].forEach(input => {
+      input.addEventListener('input', updatePersonalization);
+    });
+
+    // Inject footer into every slide (except title)
+    document.querySelectorAll('.slide:not(.slide-title)').forEach(slide => {
+      const footer = document.createElement('div');
+      footer.className = 'slide-footer';
+      footer.style.display = 'none';
+      slide.appendChild(footer);
     });
   </script>
 
@@ -695,6 +795,70 @@ form_type:
     }
     .print-btn:hover { background: #C33520; }
     .print-btn:hover .arrow { transform: translateY(2px); }
+
+    /* Personalization bar */
+    .deck-personalize {
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0.75rem 0.7in;
+      background: #F4EEE2;
+      border-bottom: 1px solid rgba(23, 20, 16, 0.08);
+    }
+    .personalize-fields {
+      display: flex; gap: 1rem; align-items: end; flex-wrap: wrap;
+    }
+    .personalize-fields label {
+      display: flex; flex-direction: column; gap: 0.25rem; flex: 1; min-width: 160px;
+    }
+    .personalize-fields label span {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+      font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #8A847B;
+    }
+    .personalize-fields input {
+      font-family: 'Instrument Sans', sans-serif; font-size: 0.85rem;
+      padding: 0.45rem 0.6rem; border: 1px solid rgba(23, 20, 16, 0.15);
+      border-radius: 2px; background: #FBF7EB; color: #171410;
+      outline: none; transition: border-color 0.2s;
+    }
+    .personalize-fields input:focus {
+      border-color: #C33520;
+    }
+    .personalize-fields input::placeholder {
+      color: #B5AFA6;
+    }
+
+    /* Title personalized elements */
+    .title-personalized {
+      margin-top: 1.5rem; display: flex; flex-direction: column;
+      align-items: center; gap: 0.5rem;
+    }
+    .title-prepared {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .prepared-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #8A847B;
+      line-height: 1;
+    }
+    .prepared-name {
+      font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 500;
+      color: #171410; line-height: 1; padding-bottom: 1px;
+    }
+    .prepared-logo {
+      max-height: 36px; max-width: 120px; object-fit: contain;
+    }
+    .title-presenter {
+      font-size: 1rem; color: #3A3328; margin: 0;
+    }
+
+    /* Slide footer (injected by JS) */
+    .slide-footer {
+      position: absolute; bottom: 0.4in; left: 0.75in; right: 0.75in;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+      color: #B5AFA6; letter-spacing: 0.05em;
+    }
+    .slide { position: relative; }
 
     /* Deck container */
     .deck {
