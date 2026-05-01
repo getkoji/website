@@ -1,0 +1,1010 @@
+---
+/**
+ * Security Deck — multi-slide security & compliance leave-behind.
+ * Pattern mirrors /deck (standalone, printable, personalizable).
+ * 10 slides + contact. Print-to-PDF via browser.
+ */
+import BrandMark from '../../components/BrandMark.astro';
+import '../../styles/global.css';
+
+const complianceStatus = [
+  { framework: 'SOC 2 Type 1', status: 'Controls in place', timeline: 'Q4 2026 kickoff', ready: false },
+  { framework: 'SOC 2 Type 2', status: '—', timeline: 'H1 2027', ready: false },
+  { framework: 'GDPR', status: 'Technical controls ready', timeline: 'DPA ready to sign', ready: true },
+  { framework: 'CCPA', status: 'Same as GDPR', timeline: 'Ready', ready: true },
+  { framework: 'PIPEDA', status: 'Same controls', timeline: 'Ready for Canadian customers', ready: true },
+  { framework: 'HIPAA', status: 'Deferred', timeline: 'On enterprise request', ready: false },
+  { framework: 'ISO 27001', status: 'Deferred', timeline: 'No roadmap', ready: false },
+  { framework: 'PCI DSS', status: 'Out of scope', timeline: 'Stripe handles card data', ready: true },
+];
+
+const checklistDone = [
+  'SSO via OIDC / SAML',
+  'MFA enforcement (via IdP)',
+  'RBAC with 7 roles + API key scopes',
+  'Audit log with 7-year retention',
+  'TLS 1.2+ in transit, HSTS',
+  'Encryption at rest (DB + app-level)',
+  'Tenant isolation (Postgres RLS)',
+  'DPA available (GDPR-aligned)',
+  'Data residency: self-host or dedicated region',
+  'SIEM export via webhook',
+  'Right-to-erasure workflow',
+  'Backup & DR (RPO 24h / RTO 4h)',
+];
+
+const checklistPlanned = [
+  'SOC 2 Type 1 — Q4 2026',
+  'SCIM provisioning — 4–8 weeks on commitment',
+  'Annual third-party pentest — on enterprise ask',
+];
+
+const paperwork = [
+  { label: 'DPA', note: 'Data Processing Agreement — GDPR / PIPEDA aligned' },
+  { label: 'MSA', note: 'Master Service Agreement for hosted engagements' },
+  { label: 'SIG Lite', note: 'Pre-answered vendor security questionnaire' },
+  { label: 'Architecture', note: 'Detailed architecture & data flow diagram' },
+  { label: 'Sub-processors', note: 'Versioned list with change notification' },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Koji — Security & Compliance Overview for enterprise buyers." />
+  <meta name="robots" content="noindex" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+  <title>Koji — Security Deck</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    onload="this.onload=null;this.rel='stylesheet'"
+  />
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+  </noscript>
+</head>
+<body>
+  <!-- Toolbar -->
+  <div class="deck-toolbar no-print">
+    <a href="/" class="back-link">
+      <span class="arrow">←</span>
+      <span>getkoji.dev</span>
+    </a>
+    <button type="button" class="print-btn" data-print>
+      <span>Download PDF</span>
+      <span class="arrow">↓</span>
+    </button>
+  </div>
+
+  <!-- Personalization bar -->
+  <div class="deck-personalize no-print">
+    <div class="personalize-fields">
+      <label>
+        <span>Customer</span>
+        <input type="text" id="cfg-customer" placeholder="Acme Insurance" />
+      </label>
+      <label>
+        <span>Logo URL</span>
+        <input type="text" id="cfg-logo" placeholder="https://..." />
+      </label>
+      <label>
+        <span>Deployment</span>
+        <select id="cfg-deployment">
+          <option value="">Select…</option>
+          <option value="cloud">Koji Cloud (US)</option>
+          <option value="cloud-ca">Koji Cloud (Canada — Montréal)</option>
+          <option value="self-hosted">Self-Hosted</option>
+          <option value="enterprise">Enterprise Managed</option>
+        </select>
+      </label>
+      <label>
+        <span>Presenter</span>
+        <input type="text" id="cfg-presenter" placeholder="Frank Thomas, Founder" />
+      </label>
+      <label>
+        <span>Contact</span>
+        <input type="text" id="cfg-contact" placeholder="security@getkoji.dev" />
+      </label>
+    </div>
+  </div>
+
+  <main class="deck">
+
+    <!-- ============================================ -->
+    <!-- SLIDE 1: Title                               -->
+    <!-- ============================================ -->
+    <section class="slide slide-title">
+      <div class="brand">
+        <BrandMark size={42} />
+        <span class="wordmark">koji</span>
+      </div>
+      <h1 class="title-headline">
+        Security &amp; Compliance<br/>Overview.
+      </h1>
+      <p class="title-sub">Your documents. Your infrastructure. Your audit trail.</p>
+      <div class="title-personalized">
+        <div class="title-prepared" id="prepared-for" style="display:none">
+          <span class="prepared-label">Prepared for</span>
+          <span class="prepared-name" id="prepared-name"></span>
+          <img id="prepared-logo" class="prepared-logo" style="display:none" alt="" />
+        </div>
+        <p class="title-deployment" id="deployment-line" style="display:none"></p>
+        <p class="title-presenter" id="presenter-line" style="display:none"></p>
+      </div>
+      <p class="title-url">getkoji.dev</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 2: Deployment Options                  -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">01</span> Deployment</div>
+      <h2 class="slide-heading">Same code. Three deployment models.<br/><em class="accent">You choose where your data lives.</em></h2>
+      <div class="deploy-options">
+        <div class="deploy-opt">
+          <h3>Koji Cloud</h3>
+          <p>We host it on Vercel + Neon Postgres. Multi-tenant with row-level isolation. Zero ops burden.</p>
+        </div>
+        <div class="deploy-opt">
+          <h3>Self-Hosted</h3>
+          <p><code>docker compose up</code> in your VPC. Same product, same dashboard. Your data never leaves your network. Apache 2.0.</p>
+        </div>
+        <div class="deploy-opt">
+          <h3>Dedicated Region</h3>
+          <p>Koji-managed instance pinned to your region. Isolated database, compute, and storage. Canadian residency available (Montréal).</p>
+        </div>
+      </div>
+      <p class="slide-note">Self-hosted gets the full Pro feature set for free. No feature gates, no phone-home, no telemetry.</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 3: Architecture                        -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">02</span> Architecture</div>
+      <h2 class="slide-heading">Every boundary authenticated.<br/><em class="accent">Every query tenant-scoped.</em></h2>
+      <div class="arch-flow">
+        <div class="arch-stage">Client</div>
+        <span class="arch-arrow">→</span>
+        <div class="arch-stage arch-tls">TLS 1.2+</div>
+        <span class="arch-arrow">→</span>
+        <div class="arch-stage">API</div>
+        <span class="arch-arrow">→</span>
+        <div class="arch-stage arch-auth">Auth</div>
+        <span class="arch-arrow">→</span>
+        <div class="arch-stage arch-rls">RLS Context</div>
+        <span class="arch-arrow">→</span>
+        <div class="arch-stage">Postgres</div>
+      </div>
+      <div class="arch-branches">
+        <div class="arch-branch">
+          <span class="arch-arrow">↳</span>
+          <div class="arch-stage">Object Storage</div>
+        </div>
+        <div class="arch-branch">
+          <span class="arch-arrow">↳</span>
+          <div class="arch-stage">Queue (Inngest)</div>
+          <span class="arch-arrow">→</span>
+          <div class="arch-stage">Extraction</div>
+          <span class="arch-arrow">→</span>
+          <div class="arch-stage arch-byo">Model Endpoints (BYO)</div>
+        </div>
+      </div>
+      <div class="arch-callouts">
+        <div class="arch-callout"><strong>TLS everywhere</strong> — HSTS enforced, modern cipher suites, no plaintext fallback</div>
+        <div class="arch-callout"><strong>Tenant context</strong> — <code>SET LOCAL app.current_tenant_id</code> in every transaction</div>
+        <div class="arch-callout"><strong>BYO endpoints</strong> — customer-provided credentials, envelope-encrypted at rest</div>
+        <div class="arch-callout"><strong>No PII in logs</strong> — forbidden by policy, enforced by CI checks and log redaction</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 4: Tenant Isolation                    -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">03</span> Data Isolation</div>
+      <h2 class="slide-heading">Row-Level Security on every table.<br/><em class="accent">Database-enforced, not application-logic.</em></h2>
+      <div class="isolation-features">
+        <div class="iso-feat">
+          <span class="iso-icon">●</span>
+          <div><strong><code>ENABLE ROW LEVEL SECURITY</code> + <code>FORCE</code></strong> on every tenant-scoped table — even the table owner can't bypass</div>
+        </div>
+        <div class="iso-feat">
+          <span class="iso-icon">●</span>
+          <div><strong>Non-superuser runtime role</strong> — <code>app_user</code> connects without <code>BYPASSRLS</code>. The superuser credential is used only by the migrations job.</div>
+        </div>
+        <div class="iso-feat">
+          <span class="iso-icon">●</span>
+          <div><strong><code>withRLS()</code> wrapper</strong> — opens transaction, sets tenant context, runs query, commits. Forgetting the wrapper = zero rows, not wrong rows.</div>
+        </div>
+        <div class="iso-feat">
+          <span class="iso-icon">●</span>
+          <div><strong><code>bypass_rls</code> is audited</strong> — usage is tracked and alerted. Rising usage triggers a page.</div>
+        </div>
+        <div class="iso-feat">
+          <span class="iso-icon">●</span>
+          <div><strong>CI gate</strong> — every new tenant-scoped table must have a matching RLS policy or the build fails. Round-trip test seeds two tenants and verifies cross-tenant isolation.</div>
+        </div>
+        <div class="iso-feat">
+          <span class="iso-icon">●</span>
+          <div><strong>Self-hosted runs single-tenant</strong> with RLS still enforced. Defense in depth — identical code path, no shortcuts.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 5: Encryption                          -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">04</span> Encryption</div>
+      <h2 class="slide-heading">In transit. At rest.<br/><em class="accent">Credentials envelope-encrypted before database write.</em></h2>
+      <div class="encrypt-grid">
+        <div class="encrypt-section">
+          <h3>In transit</h3>
+          <p>TLS 1.2+ on every connection. HSTS enforced. No plaintext fallback. Modern cipher suites only.</p>
+        </div>
+        <div class="encrypt-section">
+          <h3>At rest</h3>
+          <p><strong>Database:</strong> Neon AES-256 (cloud) or customer-managed (self-hosted).</p>
+          <p><strong>Object storage:</strong> provider default encryption.</p>
+          <p><strong>Application-level:</strong> model endpoint credentials encrypted with tenant-scoped envelope key before DB write.</p>
+        </div>
+        <div class="encrypt-section">
+          <h3>Key management</h3>
+          <p>Master key in platform secrets (cloud) or filesystem / KMS / HSM (enterprise). Rotation supported for webhook secrets and session keys. Envelope key rotation: manual quarterly procedure.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 6: Access Control                      -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">05</span> Access Control</div>
+      <h2 class="slide-heading">Seven roles. Fine-grained API key scopes.<br/><em class="accent">Least privilege by default.</em></h2>
+      <div class="access-grid">
+        <div class="access-item"><strong>RBAC</strong> — 7 fixed roles: owner, admin, developer, analyst, reviewer, viewer, billing</div>
+        <div class="access-item"><strong>Zero default access</strong> — new users have no roles until explicitly invited by an admin</div>
+        <div class="access-item"><strong>API keys</strong> — scoped per-permission, hashed at rest (SHA-256), prefix-only visible in UI</div>
+        <div class="access-item"><strong>Enterprise SSO</strong> — OIDC / SAML, MFA enforcement via customer IdP</div>
+        <div class="access-item"><strong>Sessions</strong> — idle timeout + hard expiry, revocation supported</div>
+        <div class="access-item"><strong>Privileged ops</strong> — just-in-time elevation, every use audited</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 7: Audit Logging                       -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">06</span> Audit Trail</div>
+      <h2 class="slide-heading">Every authentication. Every permission change.<br/><em class="accent">Append-only. Database-constrained.</em></h2>
+      <div class="audit-features">
+        <div class="audit-feat">
+          <span class="audit-icon">◆</span>
+          <div><strong>Full coverage</strong> — auth events, permission changes, billing changes, data exports, schema deploys, agent-assisted writes</div>
+        </div>
+        <div class="audit-feat">
+          <span class="audit-icon">◆</span>
+          <div><strong>Append-only</strong> — DB-level constraint prevents UPDATE / DELETE. Only the scheduled retention sweep deletes, and that writes its own audit entry</div>
+        </div>
+        <div class="audit-feat">
+          <span class="audit-icon">◆</span>
+          <div><strong>Configurable retention</strong> — free 7 days, scale 90 days, enterprise up to 7 years</div>
+        </div>
+        <div class="audit-feat">
+          <span class="audit-icon">◆</span>
+          <div><strong>Export</strong> — JSONL or CSV on-demand. Real-time SIEM export via webhook (enterprise)</div>
+        </div>
+        <div class="audit-feat">
+          <span class="audit-icon">◆</span>
+          <div><strong>Per-entry detail</strong> — actor, action, resource, IP, user agent, timestamp. Agent-assisted actions flagged with <code>via_agent: true</code></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 8: PII Handling                        -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">07</span> Data Handling</div>
+      <h2 class="slide-heading">Your documents contain PII.<br/><em class="accent">Here's exactly how we handle it.</em></h2>
+      <div class="pii-split">
+        <div class="pii-col">
+          <h3 class="pii-heading">Where PII lives</h3>
+          <p>Encrypted at rest in object storage (documents) and database (extraction results). Tenant-scoped access only. Model endpoint credentials envelope-encrypted.</p>
+          <p>BYO model endpoints: you control where inference happens. Self-hosted + on-prem LLM = nothing leaves your network.</p>
+        </div>
+        <div class="pii-col">
+          <h3 class="pii-heading">Where PII never appears</h3>
+          <p>Logs, traces, metrics, error messages, agent responses to other tenants.</p>
+          <p>CI checks block PRs that log suspicious field names. Log redaction strips common secret patterns (API keys, tokens).</p>
+        </div>
+      </div>
+      <div class="pii-bottom">
+        <div class="pii-point"><strong>No selling of data</strong> — ever, to anyone. Contractual commitment in every DPA.</div>
+        <div class="pii-point"><strong>Right to erasure</strong> — search, archive, hard-delete after 30-day grace. Audit entries redacted (identity tombstoned, action preserved).</div>
+        <div class="pii-point"><strong>Data minimization</strong> — we collect only what's needed to provide the service. No tracking, no analytics, no ad networks.</div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 9: Incident Response                   -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">08</span> Incident Response</div>
+      <h2 class="slide-heading">72-hour breach notification.<br/><em class="accent">Severity-tiered response. Public postmortems.</em></h2>
+      <div class="ir-timeline">
+        <div class="ir-step">
+          <span class="ir-num">1</span>
+          <div><strong>Detection</strong> — alerts from monitoring, or vulnerability reported via security@getkoji.dev</div>
+        </div>
+        <div class="ir-step">
+          <span class="ir-num">2</span>
+          <div><strong>Triage</strong> — severity assessed within 1 hour of detection</div>
+        </div>
+        <div class="ir-step">
+          <span class="ir-num">3</span>
+          <div><strong>Containment</strong> — immediate action: revoke credentials, disable feature, isolate service</div>
+        </div>
+        <div class="ir-step">
+          <span class="ir-num">4</span>
+          <div><strong>Investigation</strong> — full scope: whose data, what data, how exposed, attacker actions</div>
+        </div>
+        <div class="ir-step">
+          <span class="ir-num">5</span>
+          <div><strong>Notification</strong> — customer notified within 72 hours per GDPR Article 33</div>
+        </div>
+        <div class="ir-step">
+          <span class="ir-num">6</span>
+          <div><strong>Postmortem</strong> — public within 7 days for Sev1 incidents</div>
+        </div>
+      </div>
+      <p class="slide-note">Notification includes: nature of breach, approximate records affected, likely consequences, and measures taken.</p>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 10: Compliance Posture                 -->
+    <!-- ============================================ -->
+    <section class="slide">
+      <div class="slide-label"><span class="num">09</span> Compliance</div>
+      <h2 class="slide-heading">Honest about where we are.<br/><em class="accent">Clear about where we're going.</em></h2>
+      <table class="compliance-table">
+        <thead>
+          <tr><th>Framework</th><th>Status</th><th>Timeline</th></tr>
+        </thead>
+        <tbody>
+          {complianceStatus.map(c => (
+            <tr class={c.ready ? 'row-ready' : 'row-planned'}>
+              <td>{c.framework}</td>
+              <td>{c.status}</td>
+              <td class="mono">{c.timeline}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div class="checklist-grid">
+        <div class="checklist-col">
+          {checklistDone.map(item => (
+            <div class="checklist-item done"><span class="check">✓</span> {item}</div>
+          ))}
+        </div>
+        <div class="checklist-col">
+          {checklistPlanned.map(item => (
+            <div class="checklist-item planned"><span class="clock">◐</span> {item}</div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SLIDE 11: Next Steps / CTA                   -->
+    <!-- ============================================ -->
+    <section class="slide slide-cta">
+      <div class="slide-label"><span class="num">10</span> Next Steps</div>
+      <h2 class="slide-heading">Start with a security review.<br/><em class="accent">We'll answer every question.</em></h2>
+      <div class="next-steps">
+        <div class="step">
+          <span class="step-num">1</span>
+          <div><strong>Security call.</strong> Walk through this deck with your security team. We answer everything — no "we'll get back to you."</div>
+        </div>
+        <div class="step">
+          <span class="step-num">2</span>
+          <div><strong>Pilot under addendum.</strong> 30-day paid pilot with a custom security addendum covering any gap material to scope.</div>
+        </div>
+        <div class="step">
+          <span class="step-num">3</span>
+          <div><strong>DPA + contract.</strong> Standard DPA ready to sign. Custom terms negotiable for enterprise.</div>
+        </div>
+      </div>
+      <div class="cta-paperwork">
+        <p class="cta-label">Available on request</p>
+        <div class="cta-paperwork-list">
+          {paperwork.map(p => (
+            <div class="cta-pw-item">
+              <span class="cta-pw-label">{p.label}</span>
+              <span class="cta-pw-note">{p.note}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <p class="contact" id="contact-line">security@getkoji.dev</p>
+    </section>
+
+  </main>
+
+  <script>
+    // Print
+    document.querySelectorAll<HTMLButtonElement>('[data-print]').forEach(btn => {
+      btn.addEventListener('click', () => window.print());
+    });
+
+    // Personalization
+    const cfgCustomer = document.getElementById('cfg-customer') as HTMLInputElement;
+    const cfgLogo = document.getElementById('cfg-logo') as HTMLInputElement;
+    const cfgDeployment = document.getElementById('cfg-deployment') as HTMLSelectElement;
+    const cfgPresenter = document.getElementById('cfg-presenter') as HTMLInputElement;
+    const cfgContact = document.getElementById('cfg-contact') as HTMLInputElement;
+
+    const preparedFor = document.getElementById('prepared-for')!;
+    const preparedName = document.getElementById('prepared-name')!;
+    const preparedLogo = document.getElementById('prepared-logo') as HTMLImageElement;
+    const deploymentLine = document.getElementById('deployment-line')!;
+    const presenterLine = document.getElementById('presenter-line')!;
+    const contactLine = document.getElementById('contact-line')!;
+
+    const deploymentLabels: Record<string, string> = {
+      'cloud': 'Deployment: Koji Cloud (US)',
+      'cloud-ca': 'Deployment: Koji Cloud (Canada — Montréal)',
+      'self-hosted': 'Deployment: Self-Hosted',
+      'enterprise': 'Deployment: Enterprise Managed',
+    };
+
+    function updatePersonalization() {
+      const customer = cfgCustomer.value.trim();
+      const logo = cfgLogo.value.trim();
+      const deployment = cfgDeployment.value;
+      const presenter = cfgPresenter.value.trim();
+      const contact = cfgContact.value.trim();
+
+      if (customer) {
+        preparedFor.style.display = 'flex';
+        preparedName.textContent = customer;
+      } else {
+        preparedFor.style.display = 'none';
+      }
+
+      if (logo) {
+        preparedLogo.src = logo;
+        preparedLogo.style.display = 'block';
+      } else {
+        preparedLogo.style.display = 'none';
+      }
+
+      if (deployment && deploymentLabels[deployment]) {
+        deploymentLine.style.display = 'block';
+        deploymentLine.textContent = deploymentLabels[deployment];
+      } else {
+        deploymentLine.style.display = 'none';
+      }
+
+      if (presenter) {
+        presenterLine.style.display = 'block';
+        presenterLine.textContent = presenter;
+      } else {
+        presenterLine.style.display = 'none';
+      }
+
+      contactLine.textContent = contact || 'security@getkoji.dev';
+
+      // Slide footers
+      const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      document.querySelectorAll('.slide-footer').forEach(el => {
+        if (customer) {
+          el.textContent = `Prepared for ${customer}  ·  ${today}  ·  Confidential`;
+          (el as HTMLElement).style.display = 'block';
+        } else {
+          (el as HTMLElement).style.display = 'none';
+        }
+      });
+    }
+
+    [cfgCustomer, cfgLogo, cfgPresenter, cfgContact].forEach(input => {
+      input.addEventListener('input', updatePersonalization);
+    });
+    cfgDeployment.addEventListener('change', updatePersonalization);
+
+    // Inject footer into every slide (except title)
+    document.querySelectorAll('.slide:not(.slide-title)').forEach(slide => {
+      const footer = document.createElement('div');
+      footer.className = 'slide-footer';
+      footer.style.display = 'none';
+      slide.appendChild(footer);
+    });
+  </script>
+
+  <style is:global>
+    @page {
+      size: 11in 6.2in;
+      margin: 0;
+    }
+
+    @media print {
+      html, body {
+        background: #F4EEE2 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .no-print { display: none !important; }
+      .deck {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+      .slide {
+        page-break-after: always;
+        page-break-inside: avoid;
+        break-after: page;
+        break-inside: avoid;
+        padding: 0.5in 0.75in !important;
+        border-bottom: none !important;
+        height: 6.2in;
+        box-sizing: border-box;
+        overflow: hidden;
+      }
+      .slide:last-child {
+        page-break-after: auto;
+        break-after: auto;
+      }
+      .slide.slide-title {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 0.5in 0.75in !important;
+      }
+      .slide-heading {
+        font-size: 2.1rem !important;
+        margin-bottom: 1.25rem !important;
+        line-height: 1.15 !important;
+      }
+      .slide-label {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.75rem !important;
+        letter-spacing: 0.16em !important;
+      }
+      .title-headline {
+        font-size: 3.2rem !important;
+      }
+      .title-sub {
+        font-size: 1.4rem !important;
+      }
+      .title-url {
+        font-size: 1.1rem !important;
+      }
+      .wordmark {
+        font-size: 3rem !important;
+      }
+      /* Body text sized for slides */
+      .iso-feat, .audit-feat, .arch-callout, .access-item,
+      .pii-col p, .pii-point, .encrypt-section p,
+      .deploy-opt p, .step, .ir-step,
+      .cta-pw-item {
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+      }
+      .deploy-opt h3, .encrypt-section h3 {
+        font-size: 1.15rem !important;
+        margin-bottom: 0.35rem !important;
+      }
+      .compliance-table, .checklist-grid {
+        font-size: 0.95rem !important;
+      }
+      .compliance-table th {
+        font-size: 0.75rem !important;
+        padding: 0.45rem 0.6rem !important;
+      }
+      .compliance-table td {
+        padding: 0.35rem 0.6rem !important;
+        font-size: 0.9rem !important;
+      }
+      .checklist-item {
+        font-size: 0.95rem !important;
+      }
+      .slide-note {
+        font-size: 0.85rem !important;
+      }
+      .contact {
+        font-size: 1.3rem !important;
+      }
+      .step-num, .ir-num {
+        font-size: 1.4rem !important;
+      }
+      .deploy-options { gap: 1.25rem !important; }
+      .arch-flow { gap: 0.4rem !important; margin-bottom: 0.75rem !important; }
+      .arch-branches { gap: 0.5rem !important; margin-bottom: 1rem !important; }
+      .arch-callouts { gap: 0.5rem 1.5rem !important; }
+      .arch-stage { padding: 0.4rem 0.65rem !important; font-size: 0.75rem !important; }
+      .isolation-features { gap: 0.6rem !important; }
+      .encrypt-grid { gap: 1.25rem !important; }
+      .access-grid { gap: 0.6rem 2rem !important; }
+      .audit-features { gap: 0.55rem !important; }
+      .pii-split { gap: 1.5rem !important; }
+      .ir-timeline { gap: 0.6rem !important; }
+      .checklist-grid { gap: 0.4rem 2rem !important; margin-top: 0.75rem !important; }
+    }
+
+    body {
+      background: #E8DFC9;
+      min-height: 100vh;
+      margin: 0;
+      font-family: 'Instrument Sans', -apple-system, sans-serif;
+      color: #171410;
+    }
+
+    /* Toolbar */
+    .deck-toolbar {
+      position: sticky; top: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2rem;
+      background: rgba(232, 223, 201, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(23, 20, 16, 0.08);
+    }
+    .deck-toolbar .back-link {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.78rem;
+      color: #3A3328; text-decoration: none; transition: color 0.2s;
+    }
+    .deck-toolbar .back-link:hover { color: #C33520; }
+    .deck-toolbar .back-link:hover .arrow { transform: translateX(-3px); }
+    .deck-toolbar .back-link .arrow, .print-btn .arrow { transition: transform 0.3s ease-out; }
+    .print-btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.55rem 1rem; background: #171410; color: #F4EEE2;
+      border: none; border-radius: 2px;
+      font-family: 'Instrument Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; transition: background 0.3s;
+    }
+    .print-btn:hover { background: #C33520; }
+    .print-btn:hover .arrow { transform: translateY(2px); }
+
+    /* Personalization bar */
+    .deck-personalize {
+      max-width: 8.5in;
+      margin: 0 auto;
+      padding: 0.75rem 0.7in;
+      background: #F4EEE2;
+      border-bottom: 1px solid rgba(23, 20, 16, 0.08);
+    }
+    .personalize-fields {
+      display: flex; gap: 1rem; align-items: end; flex-wrap: wrap;
+    }
+    .personalize-fields label {
+      display: flex; flex-direction: column; gap: 0.25rem; flex: 1; min-width: 140px;
+    }
+    .personalize-fields label span {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.65rem;
+      font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #8A847B;
+    }
+    .personalize-fields input,
+    .personalize-fields select {
+      font-family: 'Instrument Sans', sans-serif; font-size: 0.85rem;
+      padding: 0.45rem 0.6rem; border: 1px solid rgba(23, 20, 16, 0.15);
+      border-radius: 2px; background: #FBF7EB; color: #171410;
+      outline: none; transition: border-color 0.2s;
+    }
+    .personalize-fields input:focus,
+    .personalize-fields select:focus {
+      border-color: #C33520;
+    }
+    .personalize-fields input::placeholder {
+      color: #B5AFA6;
+    }
+
+    /* Title slide */
+    .title-personalized {
+      margin-top: 1.5rem; display: flex; flex-direction: column;
+      align-items: center; gap: 0.5rem;
+    }
+    .title-prepared {
+      display: flex; align-items: center; gap: 0.75rem;
+    }
+    .prepared-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #8A847B;
+      line-height: 1;
+    }
+    .prepared-name {
+      font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 500;
+      color: #171410; line-height: 1; padding-bottom: 1px;
+    }
+    .prepared-logo {
+      max-height: 36px; max-width: 120px; object-fit: contain;
+    }
+    .title-deployment {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+      color: #C33520; margin: 0; letter-spacing: 0.05em;
+    }
+    .title-presenter {
+      font-size: 1rem; color: #3A3328; margin: 0;
+    }
+
+    /* Slide footer */
+    .slide-footer {
+      position: absolute; bottom: 0.4in; left: 0.75in; right: 0.75in;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.6rem;
+      color: #B5AFA6; letter-spacing: 0.05em;
+    }
+    .slide { position: relative; }
+
+    /* Deck container */
+    .deck {
+      max-width: 8.5in;
+      margin: 2rem auto 4rem;
+      background: #F4EEE2;
+      box-shadow: 0 24px 80px rgba(23, 20, 16, 0.12);
+      padding: 0.5in 0.7in;
+    }
+
+    /* Slides */
+    .slide {
+      padding: 2.5rem 0;
+      border-bottom: 1px solid rgba(23, 20, 16, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 420px;
+    }
+    .slide:last-child { border-bottom: none; }
+
+    .slide-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem; font-weight: 500;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: #8A847B; margin-bottom: 0.85rem;
+    }
+    .slide-label .num { color: #C33520; margin-right: 0.5rem; }
+
+    .slide-heading {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144, 'SOFT' 50;
+      font-size: clamp(1.8rem, 3.5vw, 2.2rem);
+      font-weight: 500; letter-spacing: -0.02em;
+      line-height: 1.15; margin: 0; padding-bottom: 1.25rem;
+    }
+    .accent {
+      color: #C33520; font-style: italic;
+      font-variation-settings: 'opsz' 144, 'SOFT' 100;
+    }
+
+    .slide-note {
+      font-size: 0.9rem; color: #8A847B; margin-top: 0.85rem;
+      font-style: italic;
+    }
+
+    /* Title slide */
+    .slide.slide-title {
+      text-align: center; padding: 4rem 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 50vh; border-bottom: none;
+    }
+    .slide.slide-title .brand { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 2rem; }
+    .wordmark {
+      font-family: 'Fraunces', serif; font-size: 3rem;
+      font-variation-settings: 'opsz' 144, 'SOFT' 30;
+      font-weight: 500; letter-spacing: -0.015em; line-height: 1;
+    }
+    .title-headline {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: 'opsz' 144, 'SOFT' 50;
+      font-size: clamp(2.4rem, 5vw, 3.2rem);
+      font-weight: 500; letter-spacing: -0.025em; line-height: 1.1;
+      margin: 0 0 1.25rem;
+    }
+    .title-sub { font-size: 1.4rem; color: #3A3328; margin: 0 0 0.75rem; }
+    .title-url { font-family: 'JetBrains Mono', monospace; font-size: 1.1rem; color: #C33520; margin: 0; }
+
+    /* Deploy options */
+    .deploy-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem; }
+    .deploy-opt {
+      padding: 1.5rem; border: 1px solid rgba(23, 20, 16, 0.12); border-radius: 3px;
+    }
+    .deploy-opt h3 {
+      font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 500;
+      margin: 0 0 0.5rem;
+    }
+    .deploy-opt p { font-size: 1.05rem; color: #3A3328; margin: 0; line-height: 1.55; }
+    .deploy-opt code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+      background: rgba(23, 20, 16, 0.05); padding: 0.15rem 0.4rem; border-radius: 2px;
+    }
+
+    /* Architecture */
+    .arch-flow {
+      display: flex; align-items: center; gap: 0.5rem;
+      flex-wrap: wrap; margin-top: 0.5rem; margin-bottom: 1rem;
+    }
+    .arch-branches {
+      display: flex; flex-direction: column; gap: 0.5rem;
+      margin-bottom: 1.25rem; padding-left: 2rem;
+    }
+    .arch-branch {
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .arch-stage {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 500;
+      padding: 0.45rem 0.75rem; border: 1px solid rgba(23, 20, 16, 0.15);
+      border-radius: 2px; background: #FBF7EB; white-space: nowrap;
+    }
+    .arch-tls { border-color: #2D8A4E; color: #2D8A4E; }
+    .arch-auth { border-color: #C33520; color: #C33520; }
+    .arch-rls { background: #C33520; color: #F4EEE2; border-color: #C33520; }
+    .arch-byo { border-style: dashed; color: #8A847B; }
+    .arch-arrow { color: #8A847B; font-size: 1rem; font-family: 'JetBrains Mono', monospace; }
+    .arch-callouts { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem 2rem; }
+    .arch-callout { font-size: 1rem; color: #3A3328; line-height: 1.5; }
+    .arch-callout strong { color: #171410; }
+    .arch-callout code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+      background: rgba(23, 20, 16, 0.05); padding: 0.1rem 0.35rem; border-radius: 2px;
+    }
+
+    /* Isolation */
+    .isolation-features { display: flex; flex-direction: column; gap: 0.75rem; }
+    .iso-feat {
+      display: flex; gap: 0.7rem; font-size: 1.05rem; line-height: 1.55; color: #3A3328;
+    }
+    .iso-icon { color: #C33520; font-size: 0.6rem; flex-shrink: 0; margin-top: 0.5rem; }
+    .iso-feat strong { color: #171410; }
+    .iso-feat code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.88rem;
+      background: rgba(23, 20, 16, 0.05); padding: 0.1rem 0.35rem; border-radius: 2px;
+    }
+
+    /* Encryption */
+    .encrypt-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem; }
+    .encrypt-section h3 {
+      font-family: 'Fraunces', serif; font-size: 1.15rem; font-weight: 500;
+      margin: 0 0 0.5rem; color: #171410;
+    }
+    .encrypt-section p { font-size: 1rem; color: #3A3328; margin: 0 0 0.4rem; line-height: 1.55; }
+    .encrypt-section strong { color: #171410; }
+
+    /* Access control */
+    .access-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem 2.5rem; margin-top: 0.5rem; }
+    .access-item { font-size: 1.05rem; color: #3A3328; line-height: 1.55; }
+    .access-item strong { color: #171410; }
+
+    /* Audit */
+    .audit-features { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 0.25rem; }
+    .audit-feat {
+      display: flex; gap: 0.7rem; font-size: 1.05rem; line-height: 1.55; color: #3A3328;
+    }
+    .audit-icon { color: #C33520; flex-shrink: 0; margin-top: 0.2rem; font-size: 0.7rem; }
+    .audit-feat strong { color: #171410; }
+    .audit-feat code {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.88rem;
+      background: rgba(23, 20, 16, 0.05); padding: 0.1rem 0.35rem; border-radius: 2px;
+    }
+
+    /* PII handling */
+    .pii-split { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 0.5rem; }
+    .pii-col {
+      padding: 1.25rem; border: 1px solid rgba(23, 20, 16, 0.12); border-radius: 3px;
+    }
+    .pii-heading {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase; color: #8A847B;
+      margin: 0 0 0.75rem;
+    }
+    .pii-col p { font-size: 1rem; color: #3A3328; margin: 0 0 0.5rem; line-height: 1.55; }
+    .pii-bottom {
+      display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-top: 1rem;
+    }
+    .pii-point { font-size: 0.95rem; color: #3A3328; line-height: 1.5; }
+    .pii-point strong { color: #171410; }
+
+    /* Incident response */
+    .ir-timeline { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.25rem; }
+    .ir-step {
+      display: flex; gap: 0.85rem; font-size: 1.05rem; line-height: 1.55; color: #3A3328;
+    }
+    .ir-step strong { color: #171410; }
+    .ir-num {
+      font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 500;
+      color: #C33520; flex-shrink: 0; line-height: 1.3; min-width: 1.5rem; text-align: center;
+    }
+
+    /* Compliance table */
+    .compliance-table {
+      width: 100%; border-collapse: collapse; font-size: 0.95rem; margin-top: 0.25rem;
+    }
+    .compliance-table th {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;
+      font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+      color: #8A847B; text-align: left; padding: 0.4rem 0.7rem;
+      border-bottom: 2px solid rgba(23, 20, 16, 0.15);
+    }
+    .compliance-table td {
+      padding: 0.35rem 0.7rem; border-bottom: 1px solid rgba(23, 20, 16, 0.06);
+      color: #3A3328; font-size: 0.95rem;
+    }
+    .row-ready td:first-child { font-weight: 500; color: #171410; }
+    .row-planned td:first-child { color: #8A847B; }
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; }
+
+    /* Checklist */
+    .checklist-grid {
+      display: grid; grid-template-columns: 2fr 1fr; gap: 0.5rem 2rem; margin-top: 1rem;
+    }
+    .checklist-col {
+      display: flex; flex-direction: column; gap: 0.3rem;
+    }
+    .checklist-item {
+      font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .checklist-item.done { color: #171410; }
+    .checklist-item.planned { color: #8A847B; }
+    .check { color: #2D8A4E; font-weight: 600; font-size: 1rem; }
+    .clock { color: #B08D2D; font-size: 1rem; }
+
+    /* CTA slide */
+    .next-steps { display: flex; flex-direction: column; gap: 1.25rem; margin-bottom: 1.5rem; }
+    .step { display: flex; gap: 1rem; font-size: 1.1rem; line-height: 1.55; color: #3A3328; }
+    .step strong { color: #171410; }
+    .step-num {
+      font-family: 'Fraunces', serif; font-size: 1.6rem; font-weight: 500;
+      color: #C33520; flex-shrink: 0; line-height: 1.3;
+    }
+    .contact {
+      font-family: 'JetBrains Mono', monospace; font-size: 1.3rem;
+      color: #C33520; font-weight: 500; margin-top: 1rem;
+    }
+
+    /* CTA paperwork */
+    .cta-paperwork {
+      padding: 1rem 0; border-top: 1px solid rgba(23, 20, 16, 0.1);
+    }
+    .cta-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.7rem;
+      font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase;
+      color: #8A847B; margin: 0 0 0.6rem;
+    }
+    .cta-paperwork-list {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem 2rem;
+    }
+    .cta-pw-item {
+      display: flex; align-items: baseline; gap: 0.6rem; font-size: 0.95rem;
+    }
+    .cta-pw-label {
+      font-family: 'JetBrains Mono', monospace; font-size: 0.72rem;
+      font-weight: 500; color: #C33520; text-transform: uppercase;
+      letter-spacing: 0.08em; flex-shrink: 0;
+    }
+    .cta-pw-note { color: #3A3328; }
+
+    /* Responsive */
+    @media (max-width: 720px) {
+      .deck { max-width: 100%; margin: 0; padding: 1rem 1.25rem; box-shadow: none; }
+      .deck-toolbar { padding: 0.75rem 1.25rem; }
+      .deploy-options, .encrypt-grid, .pii-bottom { grid-template-columns: 1fr; }
+      .arch-callouts, .access-grid, .pii-split,
+      .checklist-grid, .cta-paperwork-list { grid-template-columns: 1fr; }
+      .arch-flow { gap: 0.25rem; }
+    }
+  </style>
+</body>
+</html>
