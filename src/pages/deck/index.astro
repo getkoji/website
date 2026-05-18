@@ -9,12 +9,12 @@ import BrandMark from '../../components/BrandMark.astro';
 import '../../styles/global.css';
 
 const benchmarks = [
-  { category: 'SEC Filings · IRS Forms · Multi-Format', docs: 124,  fields: '577/577',     accuracy: '100.0%', highlight: true },
-  { category: 'Insurance Certificates', docs: 61,   fields: '291/305',     accuracy: '95.4%',  highlight: false },
-  { category: 'Insurance Policies',     docs: 97,   fields: '727/763',     accuracy: '95.3%',  highlight: false },
-  { category: 'Insurance Claims',       docs: 152,  fields: '944/1,020',   accuracy: '92.5%',  highlight: false },
-  { category: 'Adversarial',           docs: 11,   fields: '55/60',       accuracy: '91.7%',  highlight: false },
-  { category: 'Invoices',              docs: 107,  fields: '478/532',     accuracy: '89.8%',  highlight: false },
+  { category: 'SEC Filings · IRS Forms · Multi-Format', docs: 125,  fields: '581/581',     accuracy: '100.0%', highlight: true },
+  { category: 'Insurance Policies',     docs: 97,   fields: '756/763',     accuracy: '99.1%',  highlight: false },
+  { category: 'Adversarial',           docs: 11,   fields: '58/60',       accuracy: '96.7%',  highlight: false },
+  { category: 'Insurance Claims',       docs: 152,  fields: '974/1,020',   accuracy: '95.5%',  highlight: false },
+  { category: 'Invoices',              docs: 155,  fields: '1,034/1,085', accuracy: '95.3%',  highlight: false },
+  { category: 'Insurance Certificates', docs: 61,   fields: '288/305',     accuracy: '94.4%',  highlight: false },
 ];
 
 const competitors = [
@@ -26,11 +26,11 @@ const competitors = [
 ];
 
 const insuranceBreakdown = [
+  { sub: 'Policies',     docs: 97,  accuracy: '99.1%', notes: 'Dec pages, endorsements, schedules' },
   { sub: 'Demand Letters', docs: 30, accuracy: '96.7%', notes: 'Free-text with state-from-address derivation' },
-  { sub: 'Certificates',  docs: 61, accuracy: '95.4%', notes: 'Certificates of liability' },
-  { sub: 'Policies',     docs: 97,  accuracy: '95.3%', notes: 'Dec pages, endorsements, schedules' },
-  { sub: 'Claims (filled)', docs: 50, accuracy: '93.6%', notes: 'ACORD-style claim forms' },
-  { sub: 'Loss Runs',     docs: 50, accuracy: '90.8%', notes: 'Multi-page tabular, header carry-forward in dev' },
+  { sub: 'Claims (filled)', docs: 50, accuracy: '95.5%', notes: 'ACORD-style claim forms' },
+  { sub: 'Certificates',  docs: 61, accuracy: '94.4%', notes: 'Certificates of liability' },
+  { sub: 'Loss Runs',     docs: 50, accuracy: '93.0%', notes: 'Multi-page tabular' },
 ];
 
 const subprocessors = [
@@ -283,7 +283,7 @@ form_type:
     <!-- ============================================ -->
     <section class="slide">
       <div class="slide-label"><span class="num">06</span> Accuracy</div>
-      <h2 class="slide-heading">552 documents. 3,257 fields. 5 domains.<br/><em class="accent">Six categories above 95%. All above 89%.</em></h2>
+      <h2 class="slide-heading">653 documents. 3,961 fields. 6 domains.<br/><em class="accent">Five categories above 95%. Overall 96.1%.</em></h2>
       <table class="bench-table" style="margin-top:-2rem">
         <thead>
           <tr><th>Category</th><th>Docs</th><th>Fields</th><th>Accuracy</th></tr>
@@ -300,8 +300,8 @@ form_type:
           <tr class="total-row">
             <td><strong>Total</strong></td>
             <td class="mono"><strong>552</strong></td>
-            <td class="mono"><strong>3,072/3,257</strong></td>
-            <td class="mono accuracy"><strong>94.3%</strong></td>
+            <td class="mono"><strong>3,808/3,961</strong></td>
+            <td class="mono accuracy"><strong>96.1%</strong></td>
           </tr>
         </tbody>
       </table>

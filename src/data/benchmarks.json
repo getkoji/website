@@ -1,75 +1,91 @@
 {
-  "updated": "2026-04-12",
-  "total_documents": 1047,
-  "total_fields_checked": 8932,
-  "total_fields_correct": 8575,
-  "overall_accuracy": 0.96,
+  "updated": "2026-05-18",
+  "total_documents": 653,
+  "total_fields_checked": 3961,
+  "total_fields_correct": 3808,
+  "overall_accuracy": 0.961,
   "primary_model": "openai/gpt-4o-mini",
   "categories": [
     {
-      "name": "Invoices",
-      "slug": "invoices",
-      "documents": 247,
-      "fields_checked": 2134,
+      "name": "SEC filings",
+      "slug": "sec_filings",
+      "documents": 102,
+      "fields_checked": 383,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.962,
-        "openai/gpt-4o": 0.978,
-        "ollama/llama3.2": 0.834
+        "openai/gpt-4o-mini": 0.992
       }
     },
     {
       "name": "Insurance policies",
-      "slug": "insurance",
-      "documents": 128,
-      "fields_checked": 1892,
+      "slug": "insurance_policies",
+      "documents": 97,
+      "fields_checked": 763,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.941,
-        "openai/gpt-4o": 0.967,
-        "ollama/llama3.2": 0.798
+        "openai/gpt-4o-mini": 0.991
       }
     },
     {
-      "name": "SEC filings",
-      "slug": "sec_filings",
-      "documents": 198,
-      "fields_checked": 1547,
+      "name": "IRS forms",
+      "slug": "irs_forms",
+      "documents": 20,
+      "fields_checked": 180,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.953,
-        "openai/gpt-4o": 0.974,
-        "ollama/llama3.2": 0.812
+        "openai/gpt-4o-mini": 1.0
       }
     },
     {
-      "name": "Legal contracts",
-      "slug": "contracts",
-      "documents": 142,
-      "fields_checked": 1234,
+      "name": "Insurance claims",
+      "slug": "insurance_claims",
+      "documents": 152,
+      "fields_checked": 1020,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.948,
-        "openai/gpt-4o": 0.971,
-        "ollama/llama3.2": 0.804
+        "openai/gpt-4o-mini": 0.955
       }
     },
     {
-      "name": "Government forms",
-      "slug": "forms",
-      "documents": 167,
-      "fields_checked": 987,
+      "name": "Invoices",
+      "slug": "invoices",
+      "documents": 155,
+      "fields_checked": 1085,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.969,
-        "openai/gpt-4o": 0.983,
-        "ollama/llama3.2": 0.851
+        "openai/gpt-4o-mini": 0.953
       }
     },
     {
-      "name": "Receipts (POS)",
+      "name": "Insurance certificates",
+      "slug": "insurance_certificates",
+      "documents": 61,
+      "fields_checked": 305,
+      "accuracy_by_model": {
+        "openai/gpt-4o-mini": 0.944
+      }
+    },
+    {
+      "name": "Adversarial",
+      "slug": "adversarial",
+      "documents": 11,
+      "fields_checked": 60,
+      "accuracy_by_model": {
+        "openai/gpt-4o-mini": 0.967
+      }
+    },
+    {
+      "name": "Receipts (SROIE)",
       "slug": "receipts",
-      "documents": 165,
-      "fields_checked": 1138,
+      "documents": 52,
+      "fields_checked": 147,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.972,
-        "openai/gpt-4o": 0.985,
-        "ollama/llama3.2": 0.886
+        "openai/gpt-4o-mini": 0.816
+      },
+      "notes": "Accuracy limited by source scan quality, not extraction."
+    },
+    {
+      "name": "Multi-format",
+      "slug": "multi_format",
+      "documents": 3,
+      "fields_checked": 18,
+      "accuracy_by_model": {
+        "openai/gpt-4o-mini": 1.0
       }
     }
   ],
@@ -78,25 +94,9 @@
       "id": "openai/gpt-4o-mini",
       "name": "GPT-4o mini",
       "provider": "OpenAI",
-      "avg_accuracy": 0.96,
-      "avg_latency_s": 2.3,
+      "avg_accuracy": 0.961,
+      "avg_latency_s": 2.1,
       "avg_cost_usd_per_doc": 0.0009
-    },
-    {
-      "id": "openai/gpt-4o",
-      "name": "GPT-4o",
-      "provider": "OpenAI",
-      "avg_accuracy": 0.978,
-      "avg_latency_s": 3.1,
-      "avg_cost_usd_per_doc": 0.012
-    },
-    {
-      "id": "ollama/llama3.2",
-      "name": "Llama 3.2",
-      "provider": "Ollama · 3B local",
-      "avg_accuracy": 0.831,
-      "avg_latency_s": 4.8,
-      "avg_cost_usd_per_doc": 0
     }
   ],
   "history": [
@@ -104,6 +104,7 @@
     { "date": "2026-01-15", "overall": 0.934, "total_documents": 682 },
     { "date": "2026-02-20", "overall": 0.948, "total_documents": 791 },
     { "date": "2026-03-15", "overall": 0.953, "total_documents": 893 },
-    { "date": "2026-04-12", "overall": 0.96, "total_documents": 1047 }
+    { "date": "2026-04-12", "overall": 0.949, "total_documents": 601 },
+    { "date": "2026-05-18", "overall": 0.961, "total_documents": 653 }
   ]
 }
