@@ -37,7 +37,7 @@ import BrandMark from './BrandMark.astro';
           <span></span><span></span><span></span>
         </div>
         <div class="snippet-label" aria-hidden="true">self-hosted install</div>
-        <pre class="code"><code><span class="tok-prompt">$</span> pip install koji-cli
+        <pre class="code"><code><span class="tok-prompt">$</span> uv tool install git+https://github.com/getkoji/koji.git
 <span class="tok-prompt">$</span> koji init myproject --template invoice
 <span class="tok-prompt">$</span> koji process invoice.pdf
 <span class="tok-out">→ output/invoice.json  (97% confidence, 2.4s)</span></code></pre>
