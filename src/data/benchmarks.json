@@ -1,29 +1,11 @@
 {
-  "updated": "2026-05-18",
-  "total_documents": 653,
-  "total_fields_checked": 3961,
-  "total_fields_correct": 3808,
-  "overall_accuracy": 0.961,
+  "updated": "2026-05-22",
+  "total_documents": 1000,
+  "total_fields_checked": 6521,
+  "total_fields_correct": 6259,
+  "overall_accuracy": 0.960,
   "primary_model": "openai/gpt-4o-mini",
   "categories": [
-    {
-      "name": "SEC filings",
-      "slug": "sec_filings",
-      "documents": 102,
-      "fields_checked": 383,
-      "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.992
-      }
-    },
-    {
-      "name": "Insurance policies",
-      "slug": "insurance_policies",
-      "documents": 97,
-      "fields_checked": 763,
-      "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.991
-      }
-    },
     {
       "name": "IRS forms",
       "slug": "irs_forms",
@@ -34,30 +16,30 @@
       }
     },
     {
-      "name": "Insurance claims",
-      "slug": "insurance_claims",
-      "documents": 152,
-      "fields_checked": 1020,
+      "name": "Multi-format",
+      "slug": "multi_format",
+      "documents": 3,
+      "fields_checked": 18,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.955
+        "openai/gpt-4o-mini": 1.0
       }
     },
     {
-      "name": "Invoices",
-      "slug": "invoices",
-      "documents": 155,
-      "fields_checked": 1085,
+      "name": "Insurance policies",
+      "slug": "insurance_policies",
+      "documents": 97,
+      "fields_checked": 763,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.953
+        "openai/gpt-4o-mini": 0.992
       }
     },
     {
-      "name": "Insurance certificates",
-      "slug": "insurance_certificates",
-      "documents": 61,
-      "fields_checked": 305,
+      "name": "SEC filings",
+      "slug": "sec_filings",
+      "documents": 288,
+      "fields_checked": 2016,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.944
+        "openai/gpt-4o-mini": 0.983
       }
     },
     {
@@ -70,23 +52,59 @@
       }
     },
     {
+      "name": "Legal filings",
+      "slug": "legal_filings",
+      "documents": 61,
+      "fields_checked": 427,
+      "accuracy_by_model": {
+        "openai/gpt-4o-mini": 0.963
+      }
+    },
+    {
+      "name": "Insurance claims",
+      "slug": "insurance_claims",
+      "documents": 152,
+      "fields_checked": 1020,
+      "accuracy_by_model": {
+        "openai/gpt-4o-mini": 0.957
+      }
+    },
+    {
+      "name": "Invoices",
+      "slug": "invoices",
+      "documents": 155,
+      "fields_checked": 1085,
+      "accuracy_by_model": {
+        "openai/gpt-4o-mini": 0.949
+      }
+    },
+    {
+      "name": "Contracts",
+      "slug": "contracts",
+      "documents": 100,
+      "fields_checked": 500,
+      "accuracy_by_model": {
+        "openai/gpt-4o-mini": 0.908
+      }
+    },
+    {
+      "name": "Insurance certificates",
+      "slug": "insurance_certificates",
+      "documents": 61,
+      "fields_checked": 305,
+      "accuracy_by_model": {
+        "openai/gpt-4o-mini": 0.902
+      }
+    },
+    {
       "name": "Receipts (SROIE)",
       "slug": "receipts",
       "documents": 52,
       "fields_checked": 147,
       "accuracy_by_model": {
-        "openai/gpt-4o-mini": 0.816
+        "openai/gpt-4o-mini": 0.810
       },
       "notes": "Accuracy limited by source scan quality, not extraction."
-    },
-    {
-      "name": "Multi-format",
-      "slug": "multi_format",
-      "documents": 3,
-      "fields_checked": 18,
-      "accuracy_by_model": {
-        "openai/gpt-4o-mini": 1.0
-      }
     }
   ],
   "models": [
@@ -94,7 +112,7 @@
       "id": "openai/gpt-4o-mini",
       "name": "GPT-4o mini",
       "provider": "OpenAI",
-      "avg_accuracy": 0.961,
+      "avg_accuracy": 0.960,
       "avg_latency_s": 2.1,
       "avg_cost_usd_per_doc": 0.0009
     }
@@ -105,6 +123,7 @@
     { "date": "2026-02-20", "overall": 0.948, "total_documents": 791 },
     { "date": "2026-03-15", "overall": 0.953, "total_documents": 893 },
     { "date": "2026-04-12", "overall": 0.949, "total_documents": 601 },
-    { "date": "2026-05-18", "overall": 0.961, "total_documents": 653 }
+    { "date": "2026-05-18", "overall": 0.961, "total_documents": 653 },
+    { "date": "2026-05-22", "overall": 0.960, "total_documents": 1000 }
   ]
 }
