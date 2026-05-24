@@ -1,9 +1,9 @@
 {
-  "updated": "2026-05-22",
-  "total_documents": 1000,
-  "total_fields_checked": 6521,
-  "total_fields_correct": 6259,
-  "overall_accuracy": 0.960,
+  "updated": "2026-05-24",
+  "total_documents": 1100,
+  "total_fields_checked": 7121,
+  "total_fields_correct": 6845,
+  "overall_accuracy": 0.961,
   "primary_model": "openai/gpt-4o-mini",
   "categories": [
     {
@@ -41,6 +41,16 @@
       "accuracy_by_model": {
         "openai/gpt-4o-mini": 0.983
       }
+    },
+    {
+      "name": "Medical records",
+      "slug": "medical_records",
+      "documents": 100,
+      "fields_checked": 600,
+      "accuracy_by_model": {
+        "openai/gpt-4o-mini": 0.977
+      },
+      "notes": "MTSamples transcriptions (CC0). 15 medical specialties."
     },
     {
       "name": "Adversarial",
@@ -112,7 +122,7 @@
       "id": "openai/gpt-4o-mini",
       "name": "GPT-4o mini",
       "provider": "OpenAI",
-      "avg_accuracy": 0.960,
+      "avg_accuracy": 0.961,
       "avg_latency_s": 2.1,
       "avg_cost_usd_per_doc": 0.0009
     }
@@ -124,6 +134,7 @@
     { "date": "2026-03-15", "overall": 0.953, "total_documents": 893 },
     { "date": "2026-04-12", "overall": 0.949, "total_documents": 601 },
     { "date": "2026-05-18", "overall": 0.961, "total_documents": 653 },
-    { "date": "2026-05-22", "overall": 0.960, "total_documents": 1000 }
+    { "date": "2026-05-22", "overall": 0.960, "total_documents": 1000 },
+    { "date": "2026-05-24", "overall": 0.961, "total_documents": 1100 }
   ]
 }
