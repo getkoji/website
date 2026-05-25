@@ -1,0 +1,294 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  author: string;
+  tags: string[];
+}
+
+const { title, description, date, author, tags } = Astro.props;
+
+const formattedDate = date.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const ogTitle = `${title} — Koji Blog`;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/favicon-512.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="canonical" href={Astro.url.href} />
+
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={Astro.url.href} />
+    <meta property="og:image" content="https://getkoji.dev/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={description} />
+
+    <meta property="article:published_time" content={date.toISOString()} />
+    <meta property="article:author" content={author} />
+
+    <title>{ogTitle}</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+      />
+    </noscript>
+  </head>
+  <body>
+    <Header />
+    <main class="blog-post">
+      <article class="container">
+        <header class="post-header">
+          <div class="post-meta">
+            <time datetime={date.toISOString()}>{formattedDate}</time>
+            {tags.length > 0 && (
+              <>
+                <span class="meta-sep">/</span>
+                {tags.map((tag) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </>
+            )}
+          </div>
+          <h1>{title}</h1>
+          <p class="post-description">{description}</p>
+        </header>
+
+        <div class="post-content">
+          <slot />
+        </div>
+
+        <footer class="post-footer">
+          <a href="/blog" class="back-link">&larr; All posts</a>
+        </footer>
+      </article>
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .blog-post {
+    padding-top: 10rem;
+    padding-bottom: 6rem;
+  }
+
+  .blog-post .container {
+    max-width: 720px;
+  }
+
+  .post-header {
+    margin-bottom: 4rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-3);
+    letter-spacing: 0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .meta-sep {
+    opacity: 0.4;
+  }
+
+  .tag {
+    color: var(--vermillion);
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin: 0 0 1.25rem;
+  }
+
+  .post-description {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+    max-width: 600px;
+  }
+
+  /* Prose styles for rendered markdown */
+  .post-content {
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--ink);
+  }
+
+  .post-content :global(h2) {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 450;
+    letter-spacing: -0.015em;
+    margin: 3rem 0 1.25rem;
+    color: var(--ink);
+  }
+
+  .post-content :global(h3) {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 450;
+    margin: 2.5rem 0 1rem;
+    color: var(--ink);
+  }
+
+  .post-content :global(p) {
+    margin: 0 0 1.5rem;
+  }
+
+  .post-content :global(a) {
+    color: var(--vermillion);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: color-mix(in srgb, var(--vermillion) 40%, transparent);
+    transition: text-decoration-color 0.3s;
+  }
+
+  .post-content :global(a:hover) {
+    text-decoration-color: var(--vermillion);
+  }
+
+  .post-content :global(strong) {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .post-content :global(blockquote) {
+    border-left: 3px solid var(--vermillion);
+    padding-left: 1.5rem;
+    margin: 2rem 0;
+    color: var(--ink-2);
+    font-style: italic;
+  }
+
+  .post-content :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: var(--cream-2);
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+
+  .post-content :global(pre) {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 1.5rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 2rem 0;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+
+  .post-content :global(pre code) {
+    background: none;
+    padding: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  .post-content :global(ul),
+  .post-content :global(ol) {
+    margin: 0 0 1.5rem;
+    padding-left: 1.5rem;
+  }
+
+  .post-content :global(li) {
+    margin-bottom: 0.5rem;
+  }
+
+  .post-content :global(hr) {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+
+  .post-content :global(table) {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+    font-size: 0.92rem;
+  }
+
+  .post-content :global(th) {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    border-bottom: 2px solid var(--border-strong);
+    color: var(--ink-3);
+  }
+
+  .post-content :global(td) {
+    padding: 0.65rem 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .post-content :global(img) {
+    max-width: 100%;
+    border-radius: 4px;
+    margin: 2rem 0;
+  }
+
+  .post-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .back-link {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--ink-3);
+    transition: color 0.3s;
+  }
+
+  .back-link:hover {
+    color: var(--vermillion);
+  }
+</style>
