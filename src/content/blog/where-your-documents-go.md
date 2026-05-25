@@ -22,7 +22,7 @@ The PDF is converted to structured markdown — headings, tables, paragraphs. Th
 
 **What leaves your environment:** Nothing. Parsing is a local operation using open-source libraries (docling, pdfplumber). No external API calls. No network requests. The PDF never leaves the machine it's parsed on.
 
-**What's stored:** The parsed markdown is held in memory during processing. If you configure persistence (optional), it's stored in your database. If not, it's discarded after extraction completes.
+**What's stored:** The parsed markdown is cached for performance (avoids re-parsing on retries or re-extraction). The source document is stored so users can preview it in the dashboard. Both live in your tenant's isolated storage, encrypted at rest, deletable on demand.
 
 ### Stage 2: Route (markdown -> relevant sections)
 
@@ -46,7 +46,7 @@ If you use a **local model** (Llama, Qwen, Mistral via Ollama or vLLM): nothing 
 
 The extracted JSON is returned to whatever called the extraction API — your application, a webhook, a queue processor. Koji does not store extraction results unless you explicitly configure a database backend.
 
-**What's stored by Koji:** Nothing, by default. Results are returned in the API response and discarded. If you configure the platform (Koji Cloud), results are stored in your tenant's encrypted database partition.
+**What's stored by Koji:** Extraction results are stored in your tenant's encrypted database partition for audit trail and review workflows. You own this data and can delete it at any time. Self-hosted deployments store everything in your own database.
 
 ---
 
@@ -106,7 +106,7 @@ Same as above, but we provide the LLM key. Simplest to set up, same provider gua
 
 - **We don't train on your documents.** Koji is open source — you can verify this claim by reading the code. There is no telemetry that sends document content anywhere.
 - **We don't log document content.** Operational logs contain metadata (document size, section count, elapsed time, field names) but never document text or extracted values.
-- **We don't retain documents after processing.** Unless you configure persistence, documents exist only in memory during the extraction request.
+- **You control document retention.** Source documents and parsed content are stored in your tenant's isolated partition for preview and re-processing. You can delete any document at any time — deletion is permanent, not soft-delete. Self-hosted deployments store everything in your own infrastructure.
 - **We don't share LLM providers across tenants.** Each tenant configures their own model endpoint. There is no shared API key pool.
 
 ---
