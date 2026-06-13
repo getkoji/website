@@ -44,6 +44,15 @@ const year = new Date().getFullYear();
             <li><a href="https://github.com/getkoji/koji/blob/main/CODE_OF_CONDUCT.md">Code of conduct</a></li>
           </ul>
         </div>
+
+        <div class="nav-group">
+          <h2>Legal</h2>
+          <ul>
+            <li><a href="/terms">Terms of Service</a></li>
+            <li><a href="/privacy">Privacy Policy</a></li>
+            <li><a href="/aup">Acceptable Use</a></li>
+          </ul>
+        </div>
       </nav>
     </div>
 
@@ -97,8 +106,8 @@ const year = new Date().getFullYear();
 
   .footer-nav {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2.5rem;
   }
 
   .nav-group h2 {
@@ -151,6 +160,7 @@ const year = new Date().getFullYear();
     .footer-nav {
       grid-template-columns: 1fr 1fr;
       gap: 2rem;
+      row-gap: 2.5rem;
     }
 
     .footer-bottom {

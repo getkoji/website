@@ -1,0 +1,188 @@
+---
+/**
+ * LegalLayout — prose layout for ToS, Privacy Policy, AUP.
+ * Long-form readable typography; standard site Header and Footer.
+ *
+ * Frontmatter contract for pages using this layout:
+ *   title:       string  — page title (rendered as <h1> + <title>)
+ *   description: string  — meta description
+ *   slug:        string  — URL path without leading slash, e.g. "terms"
+ *   effective:   string  — effective date, e.g. "June 13, 2026"
+ *   status?:     string  — e.g. "Draft — pending legal review"
+ */
+import Layout from './Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  slug: string;
+  effective: string;
+  status?: string;
+}
+
+const { title, description, slug, effective, status } = Astro.props;
+const canonical = `https://getkoji.dev/${slug}`;
+---
+
+<Layout title={`${title} — Koji`} description={description}>
+  <Header />
+  <main class="legal">
+    <article class="legal-doc">
+      <header class="legal-header">
+        <p class="legal-eyebrow">Legal</p>
+        <h1>{title}</h1>
+        <p class="legal-meta">
+          <span><strong>Effective date:</strong> {effective}</span>
+          {status && (<><span class="legal-meta-sep">·</span><span>{status}</span></>)}
+        </p>
+      </header>
+      <div class="legal-body">
+        <slot />
+      </div>
+    </article>
+  </main>
+  <Footer />
+</Layout>
+
+<style is:global>
+  .legal {
+    padding: 4rem 1.5rem 6rem;
+    background: var(--cream);
+    min-height: 60vh;
+  }
+
+  .legal-doc {
+    max-width: 720px;
+    margin: 0 auto;
+    color: var(--ink);
+  }
+
+  .legal-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .legal-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin: 0 0 0.75rem;
+  }
+
+  .legal-header h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.5vw, 2.75rem);
+    font-weight: 500;
+    line-height: 1.1;
+    margin: 0 0 1.25rem;
+    font-variation-settings: 'opsz' 144, 'SOFT' 30;
+  }
+
+  .legal-meta {
+    font-size: 0.88rem;
+    color: var(--ink-3);
+    margin: 0;
+  }
+
+  .legal-meta strong {
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .legal-meta-sep {
+    margin: 0 0.65rem;
+    color: var(--cream-4);
+  }
+
+  .legal-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--ink-2, var(--ink));
+  }
+
+  .legal-body h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    margin: 3rem 0 1rem;
+    color: var(--ink);
+    font-variation-settings: 'opsz' 100, 'SOFT' 30;
+  }
+
+  .legal-body h3 {
+    font-family: var(--font-sans, sans-serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    margin: 2rem 0 0.75rem;
+    color: var(--ink);
+  }
+
+  .legal-body p {
+    margin: 0 0 1.1rem;
+  }
+
+  .legal-body ul,
+  .legal-body ol {
+    margin: 0 0 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .legal-body li {
+    margin-bottom: 0.5rem;
+  }
+
+  .legal-body strong {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .legal-body a {
+    color: var(--vermillion);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .legal-body a:hover {
+    text-decoration: none;
+  }
+
+  .legal-body hr {
+    margin: 3rem 0;
+    border: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .legal-body code {
+    font-family: var(--font-mono);
+    font-size: 0.92em;
+    background: var(--cream-2);
+    padding: 0.1em 0.35em;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 600px) {
+    .legal {
+      padding: 2.5rem 1rem 4rem;
+    }
+    .legal-header {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+    }
+    .legal-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+    .legal-meta-sep {
+      display: none;
+    }
+  }
+</style>
