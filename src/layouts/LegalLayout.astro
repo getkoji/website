@@ -14,7 +14,7 @@ import Layout from './Layout.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
-interface Props {
+interface LegalFrontmatter {
   title: string;
   description: string;
   slug: string;
@@ -22,7 +22,20 @@ interface Props {
   status?: string;
 }
 
-const { title, description, slug, effective, status } = Astro.props;
+interface Props {
+  // Astro markdown pages with `layout:` pass YAML frontmatter under
+  // Astro.props.frontmatter. Other .astro pages using this layout
+  // explicitly can pass props directly. Support both shapes.
+  frontmatter?: LegalFrontmatter;
+  title?: string;
+  description?: string;
+  slug?: string;
+  effective?: string;
+  status?: string;
+}
+
+const props = Astro.props.frontmatter ?? (Astro.props as LegalFrontmatter);
+const { title, description, slug, effective, status } = props;
 const canonical = `https://getkoji.dev/${slug}`;
 ---
 
