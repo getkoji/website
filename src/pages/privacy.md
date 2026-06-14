@@ -4,7 +4,6 @@ title: Privacy Policy
 description: How Koji Technologies Inc. collects, uses, and shares information when you use our platform.
 slug: privacy
 effective: June 13, 2026
-status: Draft — pending legal review
 ---
 
 This Privacy Policy describes how **Koji Technologies Inc.** ("Koji", "we", "us", or "our") collects, uses, and shares information when you use our platform, services, and websites (the "Service"). It applies to information about visitors to our websites, account holders, and end users of the Service.
