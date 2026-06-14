@@ -4,7 +4,6 @@ title: Acceptable Use Policy
 description: The rules governing acceptable use of the Koji platform.
 slug: aup
 effective: June 13, 2026
-status: Draft — pending legal review
 ---
 
 This Acceptable Use Policy ("AUP") governs your use of the Koji platform, services, and websites (the "Service"), operated by **Koji Technologies Inc.** ("Koji"). It is incorporated by reference into our [Terms of Service](/terms). Violations may result in suspension or termination of your account, without refund.

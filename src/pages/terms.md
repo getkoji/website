@@ -4,7 +4,6 @@ title: Terms of Service
 description: The terms governing your use of the Koji platform, services, and websites.
 slug: terms
 effective: June 13, 2026
-status: Draft — pending legal review
 ---
 
 These Terms of Service ("Terms") govern your access to and use of the Koji platform, services, and websites (collectively, the "Service") operated by **Koji Technologies Inc.** ("Koji", "we", "us", or "our"), a corporation incorporated under the laws of Ontario, Canada.
