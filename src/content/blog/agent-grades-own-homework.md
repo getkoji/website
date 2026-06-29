@@ -1,7 +1,7 @@
 ---
 title: "Don't Let the Agent Grade Its Own Homework"
 description: "An AI agent can improve a document extraction schema on its own — read the failures, edit the config, re-test. The hard part isn't the loop. It's making sure the agent can't lie to itself about whether it worked."
-date: 2026-06-29
+date: 2026-06-26
 author: "Frank Thomas"
 tags: ["extraction", "schemas", "workflow", "agents"]
 ---
